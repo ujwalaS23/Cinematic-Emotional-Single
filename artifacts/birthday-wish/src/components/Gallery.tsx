@@ -17,7 +17,7 @@ interface VideoData {
 /* ── Photo placeholder — replace src with real image path ── */
 const photos: PhotoData[] = [
   {
-    src: '', // REPLACE: "/photos/photo1.jpg" — Two of us smiling
+    src: '/photos/photo1.png', // Two of us smiling
     caption: "I don't remember what we were talking about...\nI only remember how happy I felt standing beside you.",
     rotate: -2.5,
     side: 'left',
