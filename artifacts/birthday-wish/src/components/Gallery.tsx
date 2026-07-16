@@ -23,7 +23,7 @@ const photos: PhotoData[] = [
     side: 'left',
   },
   {
-    src: '', // REPLACE: "/photos/photo2.jpg" — Forehead kiss
+    src: '/photos/photo2.png', // Home selfie together
     caption: "Some moments never leave.\nThey quietly become part of us.",
     rotate: 2,
     side: 'right',
