@@ -53,7 +53,7 @@ const photos: PhotoData[] = [
     side: 'center',
   },
   {
-    src: '', // REPLACE: "/photos/photo7.jpg" — Home selfie
+    src: '/photos/photo7.png',
     caption: "Home was never a place.\nSometimes it was simply standing next to you.",
     rotate: -3,
     side: 'left',
