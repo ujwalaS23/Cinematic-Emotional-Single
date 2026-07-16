@@ -106,15 +106,16 @@ function PhotoCard({ photo, index }: { photo: PhotoData; index: number }) {
           boxShadow: '0 2px 8px rgba(61,43,31,0.12), 0 10px 30px rgba(61,43,31,0.08)',
         }}
       >
-        {/* Photo area */}
+        {/* Photo area — fixed 3:4 container, image always fills it */}
         {photo.src ? (
-          <img
-            src={photo.src}
-            alt={photo.caption.split('\n')[0]}
-            loading="lazy"
-            className="w-full object-cover"
-            style={{ aspectRatio: '3/4', display: 'block' }}
-          />
+          <div style={{ aspectRatio: '3/4', overflow: 'hidden', display: 'block' }}>
+            <img
+              src={photo.src}
+              alt={photo.caption.split('\n')[0]}
+              loading="lazy"
+              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+            />
+          </div>
         ) : (
           <div
             className="w-full flex items-center justify-center"
