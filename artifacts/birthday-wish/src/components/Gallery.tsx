@@ -62,11 +62,7 @@ const photos: PhotoData[] = [
 
 /* ── Video placeholder ── */
 const videos: VideoData[] = [
-  {
-    src: '', // REPLACE: "/videos/video1.mp4" — Outdoor video
-    caption: "We weren't doing anything special.\nMaybe that's why it became special.",
-    side: 'right',
-  },
+  // Add videos here as { src: "/videos/video1.mp4", caption: "...", side: "left"|"right" }
 ];
 
 /* Extra photo placeholder */
