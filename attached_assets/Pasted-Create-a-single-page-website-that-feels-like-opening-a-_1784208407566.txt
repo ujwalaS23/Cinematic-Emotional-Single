@@ -1,0 +1,431 @@
+Create a single-page website that feels like opening a handwritten birthday letter and a scrapbook of memories.
+
+This is NOT a dramatic website.
+
+This is NOT a proposal.
+
+This is NOT asking someone to come back.
+
+This is simply a birthday gift from someone who loved deeply and still wishes that person nothing but happiness.
+
+The website should feel peaceful, elegant, warm, genuine and deeply personal.
+
+==================================================
+
+COLOR PALETTE
+
+Cream (#FFF9F3)
+
+Soft Peach (#F8DCC8)
+
+Dusty Rose (#D9A5A5)
+
+Muted Red (#B85C5C)
+
+Warm Beige (#F4E9DD)
+
+Very light floral accents
+
+Paper texture
+
+Soft shadows
+
+Rounded corners
+
+No dark theme.
+
+No stars.
+
+No neon.
+
+No black background.
+
+==================================================
+
+STYLE
+
+The entire website should feel like:
+
+A handwritten diary
+
+A memory book
+
+An old letter kept safely inside a wooden box
+
+Use:
+
+Paper textures
+
+Polaroid photographs
+
+Pressed flowers
+
+Wax seals
+
+Elegant handwriting fonts
+
+Minimal animations
+
+Soft fade transitions
+
+Very smooth scrolling
+
+No flashy effects.
+
+==================================================
+
+FIRST SCREEN
+
+Large cream paper.
+
+Small watercolor flowers.
+
+Heading
+
+Happy Birthday.
+
+Subheading
+
+"A letter I've carried in my heart."
+
+Below
+
+A wax seal button
+
+"Open"
+
+When clicked
+
+The paper unfolds with a realistic animation.
+
+==================================================
+
+INTRO LETTER
+
+Dear You,
+
+If someone had told me that one day I'd be wishing you through a website instead of hearing your voice, I probably wouldn't have believed them.
+
+Life changed.
+
+Time changed.
+
+People changed.
+
+But there is one thing that never changed...
+
+I never stopped wishing good things for you.
+
+Not just today.
+
+Not only because it's your birthday.
+
+Every single day.
+
+There hasn't been one day when you didn't cross my mind.
+
+Sometimes only for a moment.
+
+Sometimes for hours.
+
+Sometimes because something reminded me of you.
+
+Sometimes for no reason at all.
+
+Your birthday doesn't make me remember you.
+
+I already do.
+
+It simply gives me a reason to tell you.
+
+==================================================
+
+PHOTO & VIDEO GALLERY
+
+I will upload photos and videos.
+
+Arrange them like pages inside a scrapbook.
+
+Each photo/video should appear naturally between paragraphs.
+
+Each should have only one small handwritten caption.
+
+Captions:
+
+PHOTO 1
+(Two of us smiling)
+
+"I don't remember what we were talking about...
+I only remember how happy I felt standing beside you."
+
+PHOTO 2
+(Forehead kiss)
+
+"Some moments never leave.
+They quietly become part of us."
+
+PHOTO 3
+(Dog filter together)
+
+"Two silly people.
+One ordinary afternoon.
+A memory that somehow became extraordinary."
+
+PHOTO 4
+(The picture where we looked at each other)
+
+"You looked at me...
+and for a little while,
+the whole world felt quieter."
+
+PHOTO 5
+(His portrait)
+
+"The eyes I'll probably remember for the rest of my life."
+
+PHOTO 6
+(Selfie together)
+
+"Happiness looked surprisingly simple that day."
+
+PHOTO 7
+(Home selfie)
+
+"Home was never a place.
+Sometimes it was simply standing next to you."
+
+PHOTO 8
+(Outdoor video/photo)
+
+"We weren't doing anything special.
+Maybe that's why it became special."
+
+PHOTO 9
+(Cafe picture looking at each other)
+
+"If someone asked me what peace looked like,
+I'd probably show them this picture."
+
+For every additional photo or video I upload later,
+leave placeholders with editable captions.
+
+Videos should autoplay muted when they enter the viewport, loop gently, and pause when out of view.
+
+==================================================
+
+MAIN LETTER
+
+Happy Birthday.
+
+I've rewritten this letter in my head countless times.
+
+Every version sounded different.
+
+But every one of them began with you.
+
+People often say that time teaches us how to move on.
+
+Maybe that's true for many people.
+
+I don't know.
+
+I'm still trying to understand it.
+
+Because if I'm completely honest...
+
+moving on has never been something my heart knew how to do.
+
+I don't remember you only today.
+
+Not only on birthdays.
+
+Not only when I see old photographs.
+
+I remember you every single day.
+
+There hasn't been one day where you didn't quietly cross my mind.
+
+Sometimes through a song.
+
+Sometimes through a place.
+
+Sometimes through silence.
+
+Sometimes for absolutely no reason.
+
+You simply exist in so many little corners of my life.
+
+There is something I've never stopped missing.
+
+The way you called me...
+
+Piggu.
+
+It's such a tiny word.
+
+To everyone else,
+it's just a nickname.
+
+To me...
+
+it became home.
+
+Sometimes I still hear it inside my memories.
+
+Sometimes I wish I could hear it just one more time.
+
+Life has become confusing.
+
+People tell me to move on.
+
+Some tell me to wait.
+
+Some tell me to forget.
+
+Others tell me to hold on.
+
+The truth is...
+
+I honestly don't know which one is right.
+
+I'm standing somewhere between letting go and holding on.
+
+I don't know what tomorrow holds.
+
+But I do know this—
+
+what I felt for you was real.
+
+And because it was real,
+
+it isn't something I can switch off.
+
+There is only one wish my heart still quietly keeps.
+
+Not another beginning.
+
+Not explanations.
+
+Not arguments.
+
+Not answers.
+
+Just one last private meeting.
+
+Just once.
+
+No questions.
+
+No expectations.
+
+No trying to fix anything.
+
+Just to see you.
+
+To sit across from you.
+
+To quietly look at you.
+
+To fill my eyes with your face one last time.
+
+To tell my heart,
+
+"There you are."
+
+Maybe then...
+
+those memories would have one more picture to hold onto.
+
+Maybe then...
+
+my heart would finally know peace.
+
+I don't know.
+
+But that's the truth.
+
+If life never gives me that chance,
+
+I hope it gives you everything else you've ever wished for.
+
+May your dreams become reality.
+
+May your smile always stay the same.
+
+May your family always stay healthy.
+
+May success find you.
+
+May peace never leave you.
+
+May every birthday bring you joy.
+
+May life always be gentle with you.
+
+Thank you.
+
+For every memory.
+
+Every conversation.
+
+Every laugh.
+
+Every photograph.
+
+Every ordinary day that quietly became extraordinary because you were in it.
+
+You will always be one of the most beautiful chapters of my life.
+
+Happy Birthday.
+
+Always.
+
+— Your Piggu.
+
+==================================================
+
+ENDING
+
+A pressed flower appears.
+
+Below it
+
+"Some people become memories.
+
+Some memories become home."
+
+Fade.
+
+Then
+
+Happy Birthday ❤️
+
+==================================================
+
+TECHNICAL
+
+React
+
+Tailwind CSS
+
+Framer Motion
+
+Responsive
+
+Simple animations only
+
+Paper textures
+
+Editable photos
+
+Editable videos
+
+Editable captions
+
+Lazy loading
+
+Fast loading
+
+Elegant typography
+
+Looks like a luxury handwritten scrapbook instead of a modern website.

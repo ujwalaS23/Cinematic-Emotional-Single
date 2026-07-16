@@ -1,85 +1,59 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import Lenis from 'lenis';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 
-import { IntroLoader } from './components/IntroLoader';
-import { CursorTrail } from './components/CursorTrail';
-import { MouseGlow } from './components/MouseGlow';
-import { StarField3D } from './components/StarField3D';
-import { MusicPlayer } from './components/MusicPlayer';
-
-import { Hero } from './components/sections/Hero';
-import { NeverEnds } from './components/sections/NeverEnds';
-import { Gallery } from './components/sections/Gallery';
-import { Timeline } from './components/sections/Timeline';
-import { ThingsNeverSaid } from './components/sections/ThingsNeverSaid';
-import { YourEyes } from './components/sections/YourEyes';
-import { Scrapbook } from './components/sections/Scrapbook';
-import { Constellation } from './components/sections/Constellation';
-import { TheSilence } from './components/sections/TheSilence';
-import { BirthdayWish } from './components/sections/BirthdayWish';
-import { Surprise } from './components/sections/Surprise';
-import { Finale } from './components/sections/Finale';
+import { WaxSealScreen } from './components/WaxSealScreen';
+import { IntroLetter } from './components/IntroLetter';
+import { Gallery } from './components/Gallery';
+import { MainLetter } from './components/MainLetter';
+import { Ending } from './components/Ending';
 
 function App() {
-  const [loaded, setLoaded] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [opened, setOpened] = useState(false);
 
   useEffect(() => {
-    // Check for reduced motion
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    
-    if (!prefersReducedMotion) {
-      const lenis = new Lenis({ 
-        duration: 1.4, 
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) 
-      });
-      
-      function raf(time: number) { 
-        lenis.raf(time); 
-        requestAnimationFrame(raf); 
-      }
-      requestAnimationFrame(raf);
-      
-      return () => lenis.destroy();
-    }
+    if (prefersReducedMotion) return;
+
+    const lenis = new Lenis({ duration: 1.2, easing: (t) => 1 - Math.pow(1 - t, 4) });
+    function raf(time: number) { lenis.raf(time); requestAnimationFrame(raf); }
+    requestAnimationFrame(raf);
+    return () => lenis.destroy();
   }, []);
 
-  const handleEnter = () => {
-    setLoaded(true);
-    if (audioRef.current) {
-      audioRef.current.play().catch(e => console.log('Audio autoplay prevented'));
-    }
-  };
-
   return (
-    <div className="bg-background min-h-[100dvh] text-foreground selection:bg-gold/30 selection:text-white relative font-sans">
-      <CursorTrail />
-      <MouseGlow />
-      <StarField3D />
-      <MusicPlayer ref={audioRef} />
-
-      <AnimatePresence mode="wait">
-        {!loaded && <IntroLoader onEnter={handleEnter} key="loader" />}
+    /* Page background — warm cream with soft peach/rose blushes */
+    <div
+      className="min-h-[100dvh] relative overflow-x-hidden"
+      style={{
+        backgroundColor: '#FFF9F3',
+        backgroundImage: `
+          radial-gradient(ellipse 60% 40% at 10% 15%, rgba(248,220,200,0.45) 0%, transparent 60%),
+          radial-gradient(ellipse 50% 35% at 90% 75%, rgba(217,165,165,0.25) 0%, transparent 55%),
+          radial-gradient(ellipse 70% 60% at 50% 50%, rgba(244,233,221,0.3) 0%, transparent 70%)
+        `,
+      }}
+    >
+      {/* Wax seal opening screen — sits on top until opened */}
+      <AnimatePresence>
+        {!opened && (
+          <WaxSealScreen key="seal" onOpen={() => setOpened(true)} />
+        )}
       </AnimatePresence>
 
-      <main 
-        className="relative z-10 w-full overflow-hidden transition-opacity duration-1000 ease-out"
-        style={{ opacity: loaded ? 1 : 0, pointerEvents: loaded ? 'auto' : 'none' }}
+      {/* Main content — fades in after opening */}
+      <motion.main
+        initial={{ opacity: 0 }}
+        animate={{ opacity: opened ? 1 : 0 }}
+        transition={{ duration: 1.2, ease: 'easeOut', delay: 0.3 }}
+        style={{ pointerEvents: opened ? 'auto' : 'none' }}
+        className="relative z-10 w-full"
       >
-        <Hero />
-        <NeverEnds />
+        <IntroLetter />
         <Gallery />
-        <Timeline />
-        <ThingsNeverSaid />
-        <YourEyes />
-        <Scrapbook />
-        <Constellation />
-        <TheSilence />
-        <BirthdayWish />
-        <Surprise />
-        <Finale />
-      </main>
+        <MainLetter />
+        <Ending />
+      </motion.main>
     </div>
   );
 }
