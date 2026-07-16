@@ -47,7 +47,7 @@ const photos: PhotoData[] = [
     side: 'right',
   },
   {
-    src: '', // REPLACE: "/photos/photo6.jpg" — Selfie together
+    src: '/photos/photo6.png',
     caption: "Happiness looked surprisingly simple that day.",
     rotate: 1.5,
     side: 'center',
