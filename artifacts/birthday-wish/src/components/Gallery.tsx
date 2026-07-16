@@ -42,7 +42,7 @@ const photos: PhotoData[] = [
   },
   {
     src: '/photos/photo5.png',
-    caption: "The eyes I'll probably remember for the rest of my life.",
+    caption: "We weren't doing anything special.\nMaybe that's why it became special.",
     rotate: -2,
     side: 'right',
   },
