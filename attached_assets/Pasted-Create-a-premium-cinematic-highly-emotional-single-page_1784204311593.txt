@@ -1,0 +1,382 @@
+Create a premium, cinematic, highly emotional, single-page website dedicated to a birthday wish for someone who is very special to me.
+
+The website should NOT look like a normal greeting card. It should feel like an unforgettable love story, almost like an interactive movie.
+
+Theme:
+"A love that never stopped, even after silence."
+
+Overall mood:
+Deeply emotional
+Elegant
+Romantic
+Heart-touching
+Warm
+Dreamy
+Luxury design
+Modern animations
+Very aesthetic
+
+Color Palette:
+Black
+Dark Navy
+Midnight Blue
+Soft Gold
+White
+Very light rose accents
+Glowing particles
+Stars
+Floating hearts only occasionally (don't overdo them)
+
+Background:
+Animated night sky
+Tiny glowing stars
+Slow moving particles
+Aurora effect
+Glassmorphism cards
+Blurred glowing lights
+Very smooth scrolling
+
+Typography:
+Elegant serif headings
+Luxury handwritten font for love letters
+Modern clean font for paragraphs
+
+Use premium animations:
+Fade
+Parallax
+Floating elements
+Typing animation
+Page transitions
+Photo reveal animations
+Scroll-triggered animations
+Soft music controls (allow me to replace music later)
+
+---------------------------------------------------
+
+Landing Screen
+
+Full screen hero.
+
+Background:
+Night sky with stars.
+
+Large text:
+
+"Happy Birthday ❤️"
+
+Below it:
+
+"Some distances are measured in miles.
+Some are measured in silence."
+
+Below that:
+
+"A small website carrying a very big heart."
+
+A glowing button:
+
+"Open My Heart"
+
+When clicked,
+the website smoothly scrolls downward.
+
+---------------------------------------------------
+
+Section 2
+
+Large heading:
+
+"If Love Could Speak..."
+
+Show an animated handwritten letter.
+
+The letter should describe:
+
+I never stopped loving him.
+
+Time changed everything except my feelings.
+
+Silence hurts.
+
+Every birthday reminds me of him.
+
+I still pray for his happiness.
+
+I don't expect anything in return.
+
+This website is only a small piece of my heart.
+
+Do NOT make it sound needy.
+
+Make it mature,
+pure,
+honest,
+beautiful.
+
+---------------------------------------------------
+
+Section 3
+
+Photo Gallery
+
+I will upload multiple photos later.
+
+Create a beautiful animated gallery.
+
+Photos should open with lightbox effect.
+
+Use:
+
+Glass cards
+
+Rounded corners
+
+Glow on hover
+
+Floating animation
+
+Memories timeline
+
+Each photo can have a tiny emotional caption.
+
+---------------------------------------------------
+
+Section 4
+
+"The Things I'll Never Tell You"
+
+Create beautiful cards.
+
+Each card slowly appears.
+
+Cards contain thoughts like:
+
+"I still look for you."
+
+"I still remember your smile."
+
+"I still miss your voice."
+
+"I still celebrate your birthday in my heart."
+
+"I still hope you're happy."
+
+"I still love your eyes."
+
+Add 10-15 such emotional thoughts.
+
+---------------------------------------------------
+
+Section 5
+
+"Your Eyes"
+
+This entire section should be dedicated to his eyes.
+
+Background becomes darker.
+
+Slow glowing particles.
+
+Large quote:
+
+"Some people remember smiles.
+
+I remember your eyes."
+
+Describe them beautifully.
+
+Talk about how his eyes felt comforting.
+
+How they spoke without words.
+
+How they became home.
+
+Write poetic paragraphs.
+
+Very emotional.
+
+Very elegant.
+
+No clichés.
+
+---------------------------------------------------
+
+Section 6
+
+"The Silence"
+
+Create a visual timeline.
+
+Beginning:
+Our happiest memories.
+
+Then:
+
+Distance.
+
+Silence.
+
+Waiting.
+
+Hope.
+
+Acceptance.
+
+Love.
+
+End the timeline with:
+
+"My love never left."
+
+---------------------------------------------------
+
+Section 7
+
+Interactive Memories
+
+When user clicks on floating stars,
+
+small memories appear.
+
+Example:
+
+"I still remember this day."
+
+"You smiled here."
+
+"I laughed the hardest here."
+
+"I didn't know those moments would become memories."
+
+Allow me to edit these later.
+
+---------------------------------------------------
+
+Section 8
+
+Birthday Wish
+
+Large heading:
+
+"Happy Birthday"
+
+Write a long emotional birthday message.
+
+It should include:
+
+I genuinely wish you happiness.
+
+May your dreams come true.
+
+May life always protect you.
+
+May you smile every day.
+
+May your heart never know loneliness.
+
+Even if I am no longer part of your life,
+
+my prayers always will be.
+
+End with:
+
+"I loved you yesterday.
+
+I love you today.
+
+And somewhere,
+
+a part of me probably always will."
+
+---------------------------------------------------
+
+Final Section
+
+Background:
+Beautiful sunrise.
+
+Symbolizing hope.
+
+Large quote:
+
+"Some stories don't end.
+
+They simply become quiet."
+
+Below:
+
+"Happy Birthday."
+
+"My favorite person."
+
+Then:
+
+"My heart will always wish you well."
+
+---------------------------------------------------
+
+Footer
+
+Small glowing heart.
+
+Text:
+
+"Made with endless love."
+
+---------------------------------------------------
+
+Technical Requirements
+
+Use React.
+
+Use Tailwind CSS.
+
+Use Framer Motion.
+
+Use beautiful SVG dividers.
+
+Responsive for mobile.
+
+Responsive for desktop.
+
+Luxury UI.
+
+Smooth scrolling.
+
+Glassmorphism.
+
+Hover animations.
+
+Particle effects.
+
+Lightbox gallery.
+
+Lazy loading.
+
+High performance.
+
+Modern premium website.
+
+Do NOT make it look childish.
+
+Make it feel like an emotional Netflix intro mixed with Apple product design.
+
+Everything should feel cinematic.
+
+Leave placeholders where I can easily replace:
+
+Photos
+
+Music
+
+Names
+
+Dates
+
+Messages
+
+Quotes
+
+Make every paragraph deeply emotional, poetic, and heartfelt without sounding repetitive or overly dramatic.
+
+The website should make someone reading it genuinely feel the depth of love, grief, hope, and unspoken emotions.

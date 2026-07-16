@@ -1,0 +1,624 @@
+You are a world-class UI/UX designer, frontend developer, storyteller, and motion designer.
+
+Your task is to build a breathtaking cinematic website that feels like watching an emotional movie instead of browsing a webpage.
+
+The website is a birthday gift for someone who once meant everything to me.
+
+This is not a proposal.
+This is not asking someone to come back.
+This is simply a beautiful birthday letter from someone who still genuinely wishes them happiness.
+
+The emotions should feel mature, pure, respectful, nostalgic, and deeply heartfelt.
+
+The experience should leave visitors with tears in their eyes.
+
+========================================================
+
+NAME PLACEHOLDERS
+
+Name: [Replace Later]
+
+Birthday: [Replace Later]
+
+Music: [Replace Later]
+
+Photos: [Replace Later]
+
+========================================================
+
+DESIGN STYLE
+
+Imagine if Apple, Studio Ghibli, Netflix, Pixar and Awwwards designers collaborated.
+
+Visual Theme:
+
+Midnight sky
+
+Golden stars
+
+Moonlight
+
+Aurora lights
+
+Glassmorphism
+
+Soft glowing gradients
+
+Luxury typography
+
+Elegant spacing
+
+Dreamy atmosphere
+
+Everything should feel expensive.
+
+No cartoon effects.
+
+No childish animations.
+
+Use cinematic transitions.
+
+========================================================
+
+TECH STACK
+
+React
+
+TailwindCSS
+
+Framer Motion
+
+GSAP
+
+Lenis Smooth Scroll
+
+Three.js star field
+
+Glassmorphism UI
+
+Lazy loading
+
+Responsive
+
+Performance optimized
+
+Dark mode only
+
+========================================================
+
+BACKGROUND
+
+The background should continuously animate.
+
+Slow moving stars
+
+Tiny glowing particles
+
+Occasional shooting stars
+
+Very soft fog
+
+Aurora lights
+
+Moon glow
+
+Floating light dust
+
+Every section should blend naturally.
+
+========================================================
+
+INTRO LOADER
+
+Before entering the page...
+
+Show black screen.
+
+Tiny stars appear.
+
+Slow piano begins.
+
+Text fades in...
+
+"Every love story leaves behind a little light."
+
+Fade.
+
+Second line...
+
+"Tonight...
+
+this light is for you."
+
+Fade.
+
+A glowing moon appears.
+
+Button:
+
+"Enter"
+
+Click.
+
+Website opens.
+
+========================================================
+
+HERO SECTION
+
+Entire screen.
+
+Large cinematic heading.
+
+Happy Birthday ❤️
+
+Below:
+
+"If distance could erase love,
+I would have forgotten you long ago."
+
+Pause.
+
+Then animate:
+
+"But some hearts never learn how to stop caring."
+
+Slow typing effect.
+
+Button:
+
+"Read My Heart"
+
+Scroll indicator
+
+========================================================
+
+BACKGROUND MUSIC
+
+Floating music player.
+
+Very elegant.
+
+Glass effect.
+
+Allow replacing music easily.
+
+Music should autoplay only after user interaction.
+
+========================================================
+
+SECTION
+
+"Some Stories Never Really End"
+
+Handwritten letter animation.
+
+Ink slowly writes each sentence.
+
+The letter should explain...
+
+Time passed.
+
+People changed.
+
+Life changed.
+
+But gratitude never left.
+
+Some birthdays stay important forever.
+
+Not because we expect anything...
+
+But because love once made that day special.
+
+This message carries no expectations.
+
+Only good wishes.
+
+========================================================
+
+PHOTO CINEMATIC GALLERY
+
+I will upload photos later.
+
+Create an emotional gallery.
+
+Features:
+
+Polaroid style
+
+Film strip animation
+
+Photo stack
+
+Hover lift
+
+3D tilt
+
+Fullscreen lightbox
+
+Smooth zoom
+
+Floating captions
+
+Tiny sparkle animation
+
+Memory dates placeholder
+
+Gallery title:
+
+"Our Little Universe"
+
+========================================================
+
+MEMORY TIMELINE
+
+Horizontal timeline.
+
+Beautiful animations.
+
+Sections:
+
+The Beginning
+
+Our Laughter
+
+Long Conversations
+
+Inside Jokes
+
+Comfort
+
+Distance
+
+Silence
+
+Acceptance
+
+Hope
+
+Birthday
+
+Each milestone opens an emotional paragraph.
+
+========================================================
+
+SECTION
+
+"Things I Never Said"
+
+Create floating glass cards.
+
+Each card appears slowly.
+
+Include 20 heartfelt thoughts.
+
+Examples:
+
+I still smile when I remember us.
+
+Some memories still feel like yesterday.
+
+I still hope life is kind to you.
+
+I wonder if you ever remember the little things too.
+
+Some people become home.
+
+You became mine.
+
+Even silence couldn't teach my heart to hate you.
+
+The prayers never stopped.
+
+I don't need anything back.
+
+Knowing you existed already changed my life.
+
+Some birthdays are impossible to forget.
+
+========================================================
+
+SPECIAL SECTION
+
+"Your Eyes"
+
+This should become the emotional centerpiece.
+
+Everything becomes darker.
+
+Moonlight only.
+
+Particles slow down.
+
+Stars glow brighter.
+
+One giant image placeholder appears.
+
+Title:
+
+"The Place Where I Always Got Lost"
+
+Write multiple poetic paragraphs describing his eyes.
+
+Avoid clichés.
+
+Describe:
+
+Warmth
+
+Safety
+
+Peace
+
+Honesty
+
+Comfort
+
+The feeling of looking into them.
+
+How they said things words never could.
+
+How memories still remember them.
+
+Animation:
+
+Words slowly appear like breathing.
+
+========================================================
+
+SECTION
+
+"If Hearts Had Photo Albums"
+
+Interactive scrapbook.
+
+Pages turn realistically.
+
+Every page contains:
+
+Photo placeholder
+
+Tiny caption
+
+Memory title
+
+Date placeholder
+
+Little doodles
+
+Pressed flowers
+
+Paper textures
+
+========================================================
+
+INTERACTIVE CONSTELLATION
+
+Night sky.
+
+Stars connected.
+
+Each star represents a memory.
+
+Clicking a star reveals:
+
+A hidden note.
+
+A memory.
+
+A quote.
+
+Allow editing later.
+
+========================================================
+
+SECTION
+
+"The Silence"
+
+Everything becomes almost still.
+
+Music softer.
+
+Particles almost stop.
+
+Words fade one by one.
+
+Write about:
+
+Learning to live with unanswered questions.
+
+Accepting silence.
+
+Still wishing someone happiness.
+
+Understanding love doesn't always disappear.
+
+No guilt.
+
+No blame.
+
+No begging.
+
+Only honesty.
+
+========================================================
+
+SECTION
+
+"On Your Birthday"
+
+Large glowing moon.
+
+Happy Birthday.
+
+Write an incredibly beautiful birthday letter.
+
+Mention:
+
+May life protect you.
+
+May your dreams become real.
+
+May your family stay healthy.
+
+May your smile never fade.
+
+May your heart always find peace.
+
+May every year become kinder.
+
+Whether paths meet again or not...
+
+I will always be thankful our paths crossed once.
+
+========================================================
+
+SURPRISE SECTION
+
+Button:
+
+"One Last Thing..."
+
+Click.
+
+Entire page slowly darkens.
+
+Stars disappear.
+
+One candle lights.
+
+Letter slowly types...
+
+"If I could ask the universe for one gift today...
+
+it wouldn't be for you to come back.
+
+It would simply be...
+
+for life to always be gentle with you."
+
+Pause.
+
+"Happy Birthday."
+
+========================================================
+
+FINAL SCENE
+
+Night slowly transforms into sunrise.
+
+Golden sky.
+
+Birds.
+
+Soft piano.
+
+Everything becomes warm.
+
+Large quote:
+
+"Some people leave.
+
+Some memories stay.
+
+Some love simply becomes a quiet prayer."
+
+Fade in:
+
+"Thank you for existing."
+
+Then...
+
+Happy Birthday ❤️
+
+========================================================
+
+FOOTER
+
+Small glowing heart.
+
+Text:
+
+"Made with endless love."
+
+Stars continue moving forever.
+
+========================================================
+
+MICRO INTERACTIONS
+
+Hover glow
+
+Glass reflections
+
+Button ripple
+
+Image zoom
+
+Parallax
+
+Mouse glow
+
+Cursor trail
+
+Floating hearts (very few)
+
+Lens flare
+
+Gradient movement
+
+========================================================
+
+ACCESSIBILITY
+
+Keyboard navigation
+
+Reduced motion support
+
+Alt text placeholders
+
+Responsive
+
+SEO optimized
+
+========================================================
+
+ALLOW EASY REPLACEMENT OF
+
+Photos
+
+Music
+
+Name
+
+Birthday
+
+Letters
+
+Quotes
+
+Timeline
+
+Memory captions
+
+========================================================
+
+IMPORTANT
+
+Never make the website feel desperate.
+
+Never guilt-trip the reader.
+
+Never ask them to return.
+
+Never make them feel responsible.
+
+Instead, make it feel like someone quietly celebrating the existence of another person they once loved deeply.
+
+The final emotion should not be sadness.
+
+The final emotion should be gratitude, warmth, peace, and unconditional good wishes.
+
+The user should finish scrolling with a smile, moist eyes, and a feeling that love can remain beautiful even when life changes.

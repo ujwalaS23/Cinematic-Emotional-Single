@@ -1,0 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Dancing+Script:wght@400;600;700&family=Inter:wght@300;400;500&display=swap');
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme inline {
+  --color-background: #050A14;
+  --color-navy: #0A1628;
+  --color-midnight: #0D1F3C;
+  --color-gold: #C9A96E;
+  --color-gold-pale: #E8D5A3;
+  --color-foreground: #F8F4EE;
+  --color-rose: #8B4A6B;
+  --color-amber: #F5A623;
+  
+  --font-serif: "Playfair Display", serif;
+  --font-cursive: "Dancing Script", cursive;
+  --font-sans: "Inter", sans-serif;
+}
+
+@layer base {
+  html, body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    cursor: none;
+    overflow-x: hidden;
+  }
+
+  @media (pointer: coarse) {
+    html, body, button, a {
+      cursor: auto !important;
+    }
+  }
+}
+
+@layer utilities {
+  .glass-card {
+    background: rgba(13, 31, 60, 0.55);
+    border: 1px solid rgba(201, 169, 110, 0.18);
+    backdrop-filter: blur(20px) saturate(1.2);
+    border-radius: 20px;
+    box-shadow: 0 4px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(201,169,110,0.1);
+  }
+}
