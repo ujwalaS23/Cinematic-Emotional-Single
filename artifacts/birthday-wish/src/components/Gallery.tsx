@@ -35,7 +35,7 @@ const photos: PhotoData[] = [
     side: 'center',
   },
   {
-    src: '', // REPLACE: "/photos/photo4.jpg" — Looking at each other
+    src: '/photos/photo4.png',
     caption: "You looked at me...\nand for a little while,\nthe whole world felt quieter.",
     rotate: 3,
     side: 'left',
