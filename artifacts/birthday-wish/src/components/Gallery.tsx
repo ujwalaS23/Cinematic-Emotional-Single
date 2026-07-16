@@ -29,7 +29,7 @@ const photos: PhotoData[] = [
     side: 'right',
   },
   {
-    src: '', // REPLACE: "/photos/photo3.jpg" — Dog filter together
+    src: '/photos/photo3.png', // Dog filter together
     caption: "Two silly people.\nOne ordinary afternoon.\nA memory that somehow became extraordinary.",
     rotate: -1.5,
     side: 'center',
@@ -113,13 +113,13 @@ function PhotoCard({ photo, index }: { photo: PhotoData; index: number }) {
             alt={photo.caption.split('\n')[0]}
             loading="lazy"
             className="w-full object-cover"
-            style={{ aspectRatio: '4/3', display: 'block' }}
+            style={{ aspectRatio: '3/4', display: 'block' }}
           />
         ) : (
           <div
             className="w-full flex items-center justify-center"
             style={{
-              aspectRatio: '4/3',
+              aspectRatio: '3/4',
               background: 'linear-gradient(135deg, #F8DCC8 0%, #F4E9DD 50%, #D9A5A5 100%)',
             }}
           >
