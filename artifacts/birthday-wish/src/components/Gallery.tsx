@@ -41,7 +41,7 @@ const photos: PhotoData[] = [
     side: 'left',
   },
   {
-    src: '', // REPLACE: "/photos/photo5.jpg" — Portrait
+    src: '/photos/photo5.png',
     caption: "The eyes I'll probably remember for the rest of my life.",
     rotate: -2,
     side: 'right',
