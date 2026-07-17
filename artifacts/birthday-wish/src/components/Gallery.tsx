@@ -68,7 +68,7 @@ const videos: VideoData[] = [
 /* Extra photo placeholder */
 const extraPhotos: PhotoData[] = [
   {
-    src: '', // REPLACE: "/photos/photo9.jpg" — Cafe picture
+    src: '/photos/photo9.png',
     caption: "If someone asked me what peace looked like,\nI'd probably show them this picture.",
     rotate: 2.5,
     side: 'right',

@@ -8,7 +8,7 @@ interface Block {
 }
 
 const blocks: Block[] = [
-  { text: 'Happy Birthday.', style: 'heading' },
+  { text: 'Happy Birthday, Karthik.', style: 'heading' },
   { text: 'I\'ve rewritten this letter in my head countless times.', style: 'normal' },
   { text: 'Every version sounded different.', style: 'short' },
   { text: 'But every one of them began with you.', style: 'italic' },
