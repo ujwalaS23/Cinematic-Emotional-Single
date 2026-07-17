@@ -63,7 +63,7 @@ export function IntroLetter() {
             className="mb-8 text-2xl md:text-3xl"
             style={{ fontFamily: 'Caveat, cursive', color: '#6B4C3B' }}
           >
-            Dear You,
+            Dear Karthik,
           </p>
 
           {/* Paragraphs */}
