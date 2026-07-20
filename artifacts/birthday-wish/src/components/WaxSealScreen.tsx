@@ -165,7 +165,7 @@ export function WaxSealScreen({ onOpen }: { onOpen: () => void }) {
           className="font-serif text-5xl md:text-7xl mb-4 leading-tight"
           style={{ color: '#3D2B1F', fontFamily: '"Playfair Display", serif', fontStyle: 'italic' }}
         >
-          Happy Birthday.
+          Happy Birthday Karthiii..
         </h1>
 
         {/* Subheading */}
