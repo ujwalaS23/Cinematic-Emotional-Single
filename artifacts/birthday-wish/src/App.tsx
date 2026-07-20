@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { WaxSealScreen } from './components/WaxSealScreen';
 import { IntroLetter } from './components/IntroLetter';
 import { Gallery } from './components/Gallery';
+import { ProudOf } from './components/ProudOf';
 import { MainLetter } from './components/MainLetter';
 import { Ending } from './components/Ending';
 
@@ -51,6 +52,7 @@ function App() {
       >
         <IntroLetter />
         <Gallery />
+        <ProudOf />
         <MainLetter />
         <Ending />
       </motion.main>
