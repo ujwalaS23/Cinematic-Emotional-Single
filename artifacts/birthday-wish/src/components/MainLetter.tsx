@@ -227,6 +227,38 @@ export function MainLetter() {
           </motion.p>
 
           <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.2, delay: 0.4 }}
+            className="mt-8"
+            style={{ fontFamily: '"Playfair Display", serif', fontSize: '1.35rem', fontStyle: 'italic', color: '#B85C5C', lineHeight: 2 }}
+          >
+            Even now, even after everything, even across all this distance and silence —<br />
+            <span style={{ fontFamily: 'Caveat, cursive', fontSize: '1.7rem', color: '#9E3A3A', display: 'block', marginTop: '0.5rem' }}>
+              you are loved, Karthiii.
+            </span>
+            Not the kind of love that fades when things fall apart.<br />
+            The kind that stays quietly, without asking for anything back.<br />
+            The kind that still wishes you well at 2 in the morning.<br />
+            The kind that never really left.
+          </motion.p>
+
+          <motion.p
+            initial={{ opacity: 0, scale: 0.97 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.3, delay: 0.5 }}
+            className="mt-6"
+            style={{ fontFamily: 'Caveat, cursive', fontSize: '2rem', color: '#B85C5C', letterSpacing: '0.02em' }}
+          >
+            I love you, Karthiii —<br />
+            <span style={{ fontFamily: '"Crimson Pro", serif', fontSize: '1.2rem', fontStyle: 'italic', color: '#9E7E6E', display: 'block', marginTop: '0.25rem' }}>
+              even now. even still. always.
+            </span>
+          </motion.p>
+
+          <motion.p
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
