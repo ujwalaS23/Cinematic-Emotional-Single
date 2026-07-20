@@ -266,7 +266,7 @@ export function MainLetter() {
             className="mt-4"
             style={{ fontFamily: '"Playfair Display", serif', fontSize: '1.6rem', fontStyle: 'italic', color: '#3D2B1F' }}
           >
-            Happy Birthday.
+            Happy Birthday Karthiii ❤️
           </motion.p>
 
           <motion.p
@@ -278,17 +278,6 @@ export function MainLetter() {
             style={{ fontFamily: '"Crimson Pro", serif', fontSize: '1.1rem', color: '#9E7E6E' }}
           >
             Always.
-          </motion.p>
-
-          <motion.p
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1, delay: 0.8 }}
-            className="mt-6"
-            style={{ fontFamily: '"Playfair Display", serif', fontSize: '1.55rem', fontStyle: 'italic', color: '#B85C5C' }}
-          >
-            Happy Birthday, Karthiii ❤️
           </motion.p>
 
           <motion.p
