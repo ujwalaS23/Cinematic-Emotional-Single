@@ -232,10 +232,10 @@ export function MainLetter() {
             viewport={{ once: true }}
             transition={{ duration: 1.2, delay: 0.4 }}
             className="mt-8"
-            style={{ fontFamily: '"Playfair Display", serif', fontSize: '1.35rem', fontStyle: 'italic', color: '#B85C5C', lineHeight: 2 }}
+            style={{ fontFamily: '"Crimson Pro", serif', fontSize: '1.3rem', fontStyle: 'italic', color: '#B85C5C', lineHeight: 2.1 }}
           >
             Even now, even after everything, even across all this distance and silence —<br />
-            <span style={{ fontFamily: 'Caveat, cursive', fontSize: '1.7rem', color: '#9E3A3A', display: 'block', marginTop: '0.5rem' }}>
+            <span style={{ fontFamily: '"Playfair Display", serif', fontSize: '1.6rem', fontStyle: 'italic', color: '#9E3A3A', display: 'block', marginTop: '0.5rem', marginBottom: '0.3rem' }}>
               you are loved, Karthiii.
             </span>
             Not the kind of love that fades when things fall apart.<br />
@@ -250,10 +250,10 @@ export function MainLetter() {
             viewport={{ once: true }}
             transition={{ duration: 1.3, delay: 0.5 }}
             className="mt-6"
-            style={{ fontFamily: 'Caveat, cursive', fontSize: '2rem', color: '#B85C5C', letterSpacing: '0.02em' }}
+            style={{ fontFamily: '"Playfair Display", serif', fontSize: '1.9rem', fontStyle: 'italic', color: '#B85C5C', letterSpacing: '0.01em' }}
           >
             I love you, Karthiii —<br />
-            <span style={{ fontFamily: '"Crimson Pro", serif', fontSize: '1.2rem', fontStyle: 'italic', color: '#9E7E6E', display: 'block', marginTop: '0.25rem' }}>
+            <span style={{ fontFamily: '"Crimson Pro", serif', fontSize: '1.15rem', fontStyle: 'italic', color: '#9E7E6E', display: 'block', marginTop: '0.3rem' }}>
               even now. even still. always.
             </span>
           </motion.p>
@@ -278,6 +278,17 @@ export function MainLetter() {
             style={{ fontFamily: '"Crimson Pro", serif', fontSize: '1.1rem', color: '#9E7E6E' }}
           >
             Always.
+          </motion.p>
+
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1, delay: 0.8 }}
+            className="mt-6"
+            style={{ fontFamily: '"Playfair Display", serif', fontSize: '1.55rem', fontStyle: 'italic', color: '#B85C5C' }}
+          >
+            Happy Birthday, Karthiii ❤️
           </motion.p>
 
           <motion.p
