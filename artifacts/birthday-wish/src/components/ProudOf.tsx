@@ -4,33 +4,33 @@ import { motion } from 'framer-motion';
 const moments = [
   {
     icon: '🏍️',
-    title: 'His Bike',
-    text: 'He went and got his own bike. That independence, that quiet pride — I saw it and my heart just swelled.',
+    title: 'Your Bike',
+    text: 'You went and got your own bike. That independence, that quiet pride on your face — I saw it, and my heart just swelled.',
   },
   {
     icon: '🏢',
     title: 'Deloitte',
-    text: 'His dream company. He didn\'t just wish for it — he worked for it, earned it, and walked right through that door. That still makes me smile.',
+    text: 'Your dream company. You didn\'t just wish for it — you worked for it, earned it, and walked right through that door. That still makes me smile, Karthiii.',
   },
   {
     icon: '💪',
-    title: 'Taking Care of Himself',
-    text: 'Physically stronger, healthier, more himself than ever. He chose to show up for his own body, and it shows.',
+    title: 'Taking Care of Yourself',
+    text: 'You\'re stronger, healthier, more yourself than ever. You chose to show up for your own body — and it shows. I\'m genuinely proud of you for that.',
   },
   {
     icon: '✨',
     title: 'That Face, Though',
-    text: 'Handsome. Genuinely, unfairly good-looking. I am not going to pretend I didn\'t notice.',
+    text: 'Handsome. Genuinely, unfairly good-looking. I\'m not going to pretend I didn\'t notice — you know you are.',
   },
   {
     icon: '💸',
     title: 'Earning, Growing',
-    text: 'He is building something real for himself. Every month, every paycheck — that is his hard work, his discipline, his future.',
+    text: 'You\'re building something real for yourself. Every month, every paycheck — that\'s your hard work, your discipline, your future. And I\'m so happy watching you grow into it.',
   },
   {
     icon: '🤱',
-    title: 'Making His Mom Proud',
-    text: 'Of everything on this list, this one means the most. A boy who makes his mother proud is already someone special.',
+    title: 'Making Your Mom Proud',
+    text: 'Of everything on this list, this one means the most to me. The way you show up for her — that tells me everything about who you are.',
   },
 ];
 
