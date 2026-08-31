@@ -8,9 +8,28 @@ import { Gallery } from './components/Gallery';
 import { ProudOf } from './components/ProudOf';
 import { MainLetter } from './components/MainLetter';
 import { Ending } from './components/Ending';
+import { AdminDashboard } from './components/AdminDashboard';
+
+type AuthStatus = {
+  authenticated: boolean;
+  isAdmin: boolean;
+  email?: string;
+  displayName?: string;
+};
 
 function App() {
   const [opened, setOpened] = useState(false);
+  const [auth, setAuth] = useState<AuthStatus | null>(null);
+  const isAdminPath = window.location.pathname.replace(/\/+$/, '') === '/admin/visitors';
+  const contentVisible = opened || isAdminPath;
+  const authError = new URLSearchParams(window.location.search).get('authError');
+
+  useEffect(() => {
+    fetch('/api/auth/me', { credentials: 'include' })
+      .then((response) => (response.ok ? response.json() : Promise.reject(new Error('Auth status unavailable'))))
+      .then((data: AuthStatus) => setAuth(data))
+      .catch(() => setAuth({ authenticated: false, isAdmin: false }));
+  }, []);
 
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -21,6 +40,17 @@ function App() {
     requestAnimationFrame(raf);
     return () => lenis.destroy();
   }, []);
+
+  const startGoogleLogin = () => {
+    const returnTo = `${window.location.pathname}${window.location.search.replace(/([?&])authError=[^&]*/, '').replace(/[?&]$/, '')}`;
+    window.location.assign(`/api/auth/google/login?returnTo=${encodeURIComponent(returnTo || '/')}`);
+  };
+
+  const logout = async () => {
+    await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+    setAuth({ authenticated: false, isAdmin: false });
+    setOpened(false);
+  };
 
   return (
     /* Page background — warm cream with soft peach/rose blushes */
@@ -37,24 +67,69 @@ function App() {
     >
       {/* Wax seal opening screen — sits on top until opened */}
       <AnimatePresence>
-        {!opened && (
-          <WaxSealScreen key="seal" onOpen={() => setOpened(true)} />
+        {!opened && !isAdminPath && (
+          <WaxSealScreen
+            key="seal"
+            onOpen={() => setOpened(true)}
+            onGoogleLogin={startGoogleLogin}
+            authError={authError}
+          />
         )}
       </AnimatePresence>
 
       {/* Main content — fades in after opening */}
       <motion.main
         initial={{ opacity: 0 }}
-        animate={{ opacity: opened ? 1 : 0 }}
+        animate={{ opacity: contentVisible ? 1 : 0 }}
         transition={{ duration: 1.2, ease: 'easeOut', delay: 0.3 }}
-        style={{ pointerEvents: opened ? 'auto' : 'none' }}
+        style={{ pointerEvents: contentVisible ? 'auto' : 'none' }}
         className="relative z-10 w-full"
       >
-        <IntroLetter />
-        <Gallery />
-        <ProudOf />
-        <MainLetter />
-        <Ending />
+        {isAdminPath ? (
+          <AdminDashboard />
+        ) : (
+          <>
+            {auth?.authenticated && (
+              <div className="fixed top-4 right-4 z-20 flex items-center gap-3">
+                {auth.isAdmin && (
+                  <a
+                    href="/admin/visitors"
+                    className="rounded-full px-3 py-2"
+                    style={{
+                      backgroundColor: 'rgba(255, 252, 248, 0.9)',
+                      border: '1px solid rgba(184, 92, 92, 0.25)',
+                      color: '#9E3A3A',
+                      fontFamily: '"Crimson Pro", serif',
+                      fontSize: '0.95rem',
+                    }}
+                  >
+                    Visitors
+                  </a>
+                )}
+                <button
+                  type="button"
+                  onClick={logout}
+                  className="rounded-full px-3 py-2"
+                  style={{
+                    backgroundColor: 'rgba(255, 252, 248, 0.9)',
+                    border: '1px solid rgba(184, 92, 92, 0.25)',
+                    color: '#9E3A3A',
+                    fontFamily: '"Crimson Pro", serif',
+                    fontSize: '0.95rem',
+                    cursor: 'pointer',
+                  }}
+                >
+                  Sign out
+                </button>
+              </div>
+            )}
+            <IntroLetter />
+            <Gallery />
+            <ProudOf />
+            <MainLetter />
+            <Ending />
+          </>
+        )}
       </motion.main>
     </div>
   );

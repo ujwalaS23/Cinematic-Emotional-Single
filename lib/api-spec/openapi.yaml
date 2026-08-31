@@ -10,6 +10,10 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: visitor-auth
+    description: Consent-based Google visitor authentication
+  - name: admin
+    description: Owner-only visitor dashboard
 paths:
   /healthz:
     get:
@@ -24,6 +28,89 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /auth/google/login:
+    get:
+      operationId: googleVisitorLogin
+      tags: [visitor-auth]
+      summary: Start Google visitor sign-in
+      parameters:
+        - name: returnTo
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "302":
+          description: Redirects to Google's consent screen
+        "503":
+          description: OAuth is not configured
+  /auth/google/callback:
+    get:
+      operationId: googleVisitorCallback
+      tags: [visitor-auth]
+      summary: Complete Google visitor sign-in
+      parameters:
+        - name: code
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: state
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: error
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "302":
+          description: Redirects back to the birthday page
+  /auth/me:
+    get:
+      operationId: getVisitorAuth
+      tags: [visitor-auth]
+      summary: Get the current visitor session
+      responses:
+        "200":
+          description: Current session state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthStatus"
+  /auth/logout:
+    post:
+      operationId: logoutVisitor
+      tags: [visitor-auth]
+      summary: End the current visitor session
+      responses:
+        "204":
+          description: Session ended
+  /admin/visitors:
+    get:
+      operationId: listVisitors
+      tags: [admin]
+      summary: List recorded visitors for the owner
+      parameters:
+        - name: q
+          in: query
+          required: false
+          schema:
+            type: string
+            maxLength: 100
+      responses:
+        "200":
+          description: Recorded visitors
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VisitorList"
+        "401":
+          description: Authentication required
+        "403":
+          description: Admin access required
 components:
   schemas:
     HealthStatus:
@@ -33,4 +120,51 @@ components:
           type: string
       required:
         - status
+    AuthStatus:
+      type: object
+      properties:
+        authenticated:
+          type: boolean
+        isAdmin:
+          type: boolean
+        email:
+          type: string
+        displayName:
+          type: string
+      required:
+        - authenticated
+        - isAdmin
+    Visitor:
+      type: object
+      properties:
+        id:
+          type: integer
+        displayName:
+          type: string
+        email:
+          type: string
+        firstVisitAt:
+          type: string
+          format: date-time
+        lastVisitAt:
+          type: string
+          format: date-time
+        visitCount:
+          type: integer
+      required:
+        - id
+        - displayName
+        - email
+        - firstVisitAt
+        - lastVisitAt
+        - visitCount
+    VisitorList:
+      type: object
+      properties:
+        visitors:
+          type: array
+          items:
+            $ref: "#/components/schemas/Visitor"
+      required:
+        - visitors
 

@@ -78,7 +78,15 @@ function WaxSealSVG({ broken }: { broken: boolean }) {
   );
 }
 
-export function WaxSealScreen({ onOpen }: { onOpen: () => void }) {
+export function WaxSealScreen({
+  onOpen,
+  onGoogleLogin,
+  authError,
+}: {
+  onOpen: () => void;
+  onGoogleLogin: () => void;
+  authError?: string | null;
+}) {
   const [breaking, setBreaking] = useState(false);
 
   const handleOpen = () => {
@@ -176,6 +184,60 @@ export function WaxSealScreen({ onOpen }: { onOpen: () => void }) {
           A letter I've carried in my heart.
         </p>
 
+        {/* Explicit, optional visitor consent */}
+        <div className="flex flex-col items-center mb-8 max-w-sm">
+          <button
+            type="button"
+            onClick={onGoogleLogin}
+            className="flex items-center justify-center gap-3 rounded-full px-6 py-3 transition-all hover:shadow-md active:scale-95"
+            style={{
+              backgroundColor: '#FFFCF8',
+              border: '1px solid rgba(184, 92, 92, 0.35)',
+              color: '#4A3428',
+              fontFamily: '"Crimson Pro", serif',
+              fontSize: '1.05rem',
+              cursor: 'pointer',
+            }}
+          >
+            <span
+              aria-hidden="true"
+              style={{
+                fontFamily: 'Arial, sans-serif',
+                fontWeight: 700,
+                fontSize: '1.15rem',
+                color: '#B85C5C',
+              }}
+            >
+              G
+            </span>
+            Continue with Google
+          </button>
+          <p
+            className="mt-3 opacity-70"
+            style={{
+              fontFamily: '"Crimson Pro", serif',
+              color: '#6B4C3B',
+              fontSize: '0.92rem',
+              lineHeight: 1.45,
+            }}
+          >
+            Optional: Google will ask your permission to share your name and email so I can see who visited.
+          </p>
+          {authError && (
+            <p
+              role="alert"
+              className="mt-2"
+              style={{
+                fontFamily: '"Crimson Pro", serif',
+                color: '#9E3A3A',
+                fontSize: '0.95rem',
+              }}
+            >
+              {authError}
+            </p>
+          )}
+        </div>
+
         {/* Wax seal button */}
         <motion.button
           onClick={handleOpen}
@@ -193,7 +255,7 @@ export function WaxSealScreen({ onOpen }: { onOpen: () => void }) {
             style={{ fontFamily: 'Caveat, cursive', color: '#B85C5C', fontSize: '1.1rem' }}
             className="opacity-80 group-hover:opacity-100 transition-opacity"
           >
-            Open
+            Continue without signing in
           </span>
         </motion.button>
       </motion.div>

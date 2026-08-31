@@ -1,0 +1,222 @@
+I have an existing birthday-wish website in this Replit project. I want you to add Google Sign-In using Supabase and create a private visitor-tracking dashboard.
+
+IMPORTANT:
+
+* First inspect my existing project and understand the current framework, files, routes, database setup, styling, animations, music, images, and existing functionality.
+* DO NOT redesign, remove, or break any existing birthday content or animations.
+* Integrate the new functionality into the existing project.
+* Do not expose secrets or credentials in frontend code.
+* Do not attempt to secretly obtain visitors' Gmail addresses. Their email must only be obtained after they voluntarily click "Continue with Google" and complete Google authentication/consent.
+
+### 1. SUPABASE AUTHENTICATION
+
+Integrate Supabase Authentication with Google OAuth.
+
+Use environment variables/Replit Secrets:
+
+SUPABASE_URL
+SUPABASE_ANON_KEY
+SUPABASE_SERVICE_ROLE_KEY (server-side only, if required)
+
+Never hard-code these values.
+
+Configure Google OAuth through Supabase.
+
+If configuration cannot be completed automatically, clearly tell me exactly which Supabase settings I need to configure and where to find them.
+
+### 2. GOOGLE LOGIN
+
+When a visitor opens the birthday website, show a beautiful, simple entry screen before the main birthday content:
+
+"💌 A Special Surprise Awaits..."
+
+"Continue with Google to enter ❤️"
+
+[ Continue with Google ]
+
+The visitor must voluntarily click the button and sign in with Google.
+
+After successful authentication:
+
+* Get their Google display name.
+* Get their email address.
+* Store the visitor information in Supabase.
+* Redirect/show the existing birthday website exactly as it currently looks.
+
+If the visitor chooses not to sign in, do not attempt to obtain their email through any other method.
+
+### 3. VISITOR DATABASE
+
+Create a Supabase table called:
+
+visitors
+
+Use appropriate fields such as:
+
+id
+user_id
+name
+email
+first_visit_at
+last_visit_at
+visit_count
+created_at
+updated_at
+
+Use the authenticated user's unique ID to prevent duplicate visitor records.
+
+When an authenticated visitor enters the website:
+
+* If this is their first visit, create a record.
+* If they already exist, update last_visit_at.
+* Increment visit_count.
+* Do not create duplicate records for the same Google account.
+
+Store timestamps properly.
+
+### 4. PRIVATE ADMIN DASHBOARD
+
+Create a private route/page:
+
+/admin/visitors
+
+This page must NOT be publicly accessible.
+
+Only MY administrator account should be able to access it.
+
+Create an admin configuration using an environment variable such as:
+
+ADMIN_EMAIL
+
+I will put my own Gmail address into Replit Secrets.
+
+Only that exact authenticated email should be allowed to access the visitor dashboard.
+
+If anyone else attempts to open /admin/visitors:
+
+* Do not show visitor data.
+* Return an unauthorized page or redirect them to the birthday page.
+
+### 5. ADMIN DASHBOARD DESIGN
+
+Create a clean dashboard showing:
+
+Total Visitors
+
+Total Visits
+
+Recent Visitors
+
+And a table:
+
+Name | Gmail | First Visit | Last Visit | Visit Count
+
+Add:
+
+* Search by name/email.
+* Sort by newest/oldest.
+* Refresh button.
+* Logout button.
+
+Make the dashboard responsive and visually consistent with the existing birthday website.
+
+### 6. SECURITY
+
+Implement proper security.
+
+VERY IMPORTANT:
+
+* Never expose SUPABASE_SERVICE_ROLE_KEY to the browser.
+* Never put secrets directly into frontend JavaScript.
+* Use server-side operations where privileged database access is required.
+* Configure Supabase Row Level Security appropriately.
+* Normal visitors must NOT be able to query the entire visitors table.
+* Only the admin should be able to view the complete visitor list.
+* Users should only be able to authenticate themselves.
+* Do not expose one visitor's information to another visitor.
+* Validate authentication on the server for protected admin routes.
+
+### 7. PRIVACY / CONSENT
+
+The Google email must only be collected after the visitor voluntarily chooses Google Sign-In.
+
+On the login screen, add a small notice:
+
+"By continuing with Google, you allow this website to receive your Google name and email address for visitor tracking."
+
+Do not collect unnecessary Google account information.
+
+### 8. EXISTING WEBSITE
+
+Keep ALL existing birthday functionality intact, including:
+
+* Existing birthday message
+* Photos
+* Videos
+* Music
+* Animations
+* Effects
+* Buttons
+* Background
+* Fonts
+* Colors
+* Existing pages
+* Existing links
+
+Do not replace my existing UI with a generic Supabase template.
+
+The authentication screen should be added around the existing website rather than replacing it.
+
+### 9. ERROR HANDLING
+
+Handle:
+
+* Google login cancellation
+* Authentication failure
+* Supabase connection failure
+* Missing environment variables
+* Unauthorized admin access
+* Database errors
+* Expired sessions
+
+Show friendly messages rather than raw errors.
+
+### 10. LOGOUT
+
+Add logout functionality for both visitors and the admin.
+
+After logout, the visitor should no longer be considered authenticated.
+
+### 11. SETUP INSTRUCTIONS
+
+After implementing the code, give me a clear step-by-step checklist explaining:
+
+1. How to create a Supabase project.
+2. Where to find the Supabase URL.
+3. Where to find the Supabase anon/public key.
+4. How to configure Google OAuth in Supabase.
+5. Where to obtain the Google OAuth Client ID and Client Secret.
+6. Exactly what redirect URL(s) I need to add.
+7. Which values I need to add to Replit Secrets.
+8. What value I should use for ADMIN_EMAIL.
+9. How to create/run the required Supabase database table and RLS policies.
+10. How to test Google Sign-In.
+11. How to test the visitor dashboard.
+12. How to deploy the finished website.
+
+IMPORTANT:
+If Google Cloud is required for Google OAuth and my Google Cloud account is blocked, do not pretend it will work without Google OAuth configuration. Explain the exact limitation and give me the simplest available setup.
+
+### 12. FINAL CHECK
+
+Before finishing:
+
+* Run the project.
+* Check for compilation/runtime errors.
+* Test authentication flow as far as possible.
+* Test protected admin route.
+* Check that normal visitors cannot access visitor data.
+* Check that existing birthday functionality still works.
+* Fix any errors you find.
+
+Do not stop at giving me code. Implement the feature in my existing Replit project and then tell me exactly what configuration values I still need to provide.
