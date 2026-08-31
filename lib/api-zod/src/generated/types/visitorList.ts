@@ -9,4 +9,7 @@ import type { Visitor } from './visitor';
 
 export interface VisitorList {
   visitors: Visitor[];
+  totalVisitors: number;
+  totalVisits: number;
+  recentVisitors: Visitor[];
 }

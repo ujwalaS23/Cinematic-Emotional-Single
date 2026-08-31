@@ -138,26 +138,34 @@ components:
       type: object
       properties:
         id:
-          type: integer
-        displayName:
+          oneOf:
+            - type: string
+            - type: integer
+        name:
           type: string
         email:
           type: string
-        firstVisitAt:
+        first_visit_at:
           type: string
           format: date-time
-        lastVisitAt:
+        last_visit_at:
           type: string
           format: date-time
-        visitCount:
+        visit_count:
           type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
       required:
         - id
-        - displayName
+        - name
         - email
-        - firstVisitAt
-        - lastVisitAt
-        - visitCount
+        - first_visit_at
+        - last_visit_at
+        - visit_count
     VisitorList:
       type: object
       properties:
@@ -165,6 +173,17 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Visitor"
+        totalVisitors:
+          type: integer
+        totalVisits:
+          type: integer
+        recentVisitors:
+          type: array
+          items:
+            $ref: "#/components/schemas/Visitor"
       required:
         - visitors
+        - totalVisitors
+        - totalVisits
+        - recentVisitors
 

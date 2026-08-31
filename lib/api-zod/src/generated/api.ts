@@ -69,12 +69,26 @@ export const ListVisitorsQueryParams = zod.object({
 
 export const ListVisitorsResponse = zod.object({
   "visitors": zod.array(zod.object({
-  "id": zod.number(),
-  "displayName": zod.string(),
+  "id": zod.union([zod.string(),zod.number()]),
+  "name": zod.string(),
   "email": zod.string(),
-  "firstVisitAt": zod.coerce.date(),
-  "lastVisitAt": zod.coerce.date(),
-  "visitCount": zod.number()
+  "first_visit_at": zod.coerce.date(),
+  "last_visit_at": zod.coerce.date(),
+  "visit_count": zod.number(),
+  "created_at": zod.coerce.date().optional(),
+  "updated_at": zod.coerce.date().optional()
+})),
+  "totalVisitors": zod.number(),
+  "totalVisits": zod.number(),
+  "recentVisitors": zod.array(zod.object({
+  "id": zod.union([zod.string(),zod.number()]),
+  "name": zod.string(),
+  "email": zod.string(),
+  "first_visit_at": zod.coerce.date(),
+  "last_visit_at": zod.coerce.date(),
+  "visit_count": zod.number(),
+  "created_at": zod.coerce.date().optional(),
+  "updated_at": zod.coerce.date().optional()
 }))
 })
 

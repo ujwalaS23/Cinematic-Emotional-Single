@@ -17,16 +17,21 @@ export interface AuthStatus {
 }
 
 export interface Visitor {
-  id: number;
-  displayName: string;
+  id: string | number;
+  name: string;
   email: string;
-  firstVisitAt: string;
-  lastVisitAt: string;
-  visitCount: number;
+  first_visit_at: string;
+  last_visit_at: string;
+  visit_count: number;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface VisitorList {
   visitors: Visitor[];
+  totalVisitors: number;
+  totalVisits: number;
+  recentVisitors: Visitor[];
 }
 
 export type GoogleVisitorLoginParams = {

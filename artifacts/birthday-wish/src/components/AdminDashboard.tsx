@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 
 type Visitor = {
-  id: number;
-  displayName: string;
+  id: string | number;
+  name: string;
   email: string;
-  firstVisitAt: string;
-  lastVisitAt: string;
-  visitCount: number;
+  first_visit_at: string;
+  last_visit_at: string;
+  visit_count: number;
 };
 
 function formatDate(value: string): string {
@@ -19,10 +19,15 @@ function formatDate(value: string): string {
 
 export function AdminDashboard() {
   const [visitors, setVisitors] = useState<Visitor[]>([]);
+  const [totalVisitors, setTotalVisitors] = useState(0);
+  const [totalVisits, setTotalVisits] = useState(0);
+  const [recentVisitors, setRecentVisitors] = useState<Visitor[]>([]);
   const [search, setSearch] = useState('');
   const [activeSearch, setActiveSearch] = useState('');
+  const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -36,10 +41,20 @@ export function AdminDashboard() {
           throw new Error('This private dashboard is only available to the owner.');
         }
         if (!response.ok) throw new Error('Visitors could not be loaded right now.');
-        return (await response.json()) as { visitors: Visitor[] };
+        return (await response.json()) as {
+          visitors: Visitor[];
+          totalVisitors: number;
+          totalVisits: number;
+          recentVisitors: Visitor[];
+        };
       })
       .then((data) => {
-        if (!cancelled) setVisitors(Array.isArray(data.visitors) ? data.visitors : []);
+        if (!cancelled) {
+          setVisitors(Array.isArray(data.visitors) ? data.visitors : []);
+          setTotalVisitors(Number(data.totalVisitors || 0));
+          setTotalVisits(Number(data.totalVisits || 0));
+          setRecentVisitors(Array.isArray(data.recentVisitors) ? data.recentVisitors : []);
+        }
       })
       .catch((reason: unknown) => {
         if (!cancelled) setError(reason instanceof Error ? reason.message : 'Visitors could not be loaded.');
@@ -51,7 +66,12 @@ export function AdminDashboard() {
     return () => {
       cancelled = true;
     };
-  }, [activeSearch]);
+  }, [activeSearch, refreshKey]);
+
+  const displayedVisitors = [...visitors].sort((a, b) => {
+    const difference = new Date(a.last_visit_at).getTime() - new Date(b.last_visit_at).getTime();
+    return sortOrder === 'newest' ? -difference : difference;
+  });
 
   const logout = async () => {
     await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
@@ -98,7 +118,39 @@ export function AdminDashboard() {
             >
               Sign out
             </button>
+            <button
+              type="button"
+              onClick={() => setRefreshKey((key) => key + 1)}
+              className="self-start md:self-auto rounded-full px-4 py-2 transition-colors hover:bg-[#F8DCC8]"
+              style={{
+                border: '1px solid rgba(184, 92, 92, 0.3)',
+                color: '#9E3A3A',
+                fontFamily: '"Crimson Pro", serif',
+                cursor: 'pointer',
+              }}
+            >
+              Refresh
+            </button>
           </div>
+
+          {!loading && !error && (
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-7">
+              {[
+                ['Total visitors', totalVisitors],
+                ['Total visits', totalVisits],
+                ['Recent visitors', recentVisitors.length],
+              ].map(([label, value]) => (
+                <div
+                  key={label}
+                  className="rounded-2xl px-4 py-4"
+                  style={{ backgroundColor: 'rgba(248, 220, 200, 0.36)', border: '1px solid rgba(217, 165, 165, 0.35)' }}
+                >
+                  <p style={{ fontFamily: 'Caveat, cursive', color: '#C4906A', fontSize: '1.15rem' }}>{label}</p>
+                  <p style={{ fontFamily: '"Playfair Display", serif', color: '#3D2B1F', fontSize: '1.8rem' }}>{value}</p>
+                </div>
+              ))}
+            </div>
+          )}
 
           <form
             className="flex flex-col sm:flex-row gap-3 mb-7"
@@ -152,6 +204,23 @@ export function AdminDashboard() {
                 Clear
               </button>
             )}
+            <label className="sr-only" htmlFor="visitor-sort">Sort visitors</label>
+            <select
+              id="visitor-sort"
+              value={sortOrder}
+              onChange={(event) => setSortOrder(event.target.value as 'newest' | 'oldest')}
+              className="rounded-full px-4 py-3 outline-none"
+              style={{
+                backgroundColor: '#FFF9F3',
+                border: '1px solid rgba(217, 165, 165, 0.55)',
+                color: '#4A3428',
+                fontFamily: '"Crimson Pro", serif',
+                fontSize: '1.05rem',
+              }}
+            >
+              <option value="newest">Newest first</option>
+              <option value="oldest">Oldest first</option>
+            </select>
           </form>
 
           {loading && (
@@ -182,13 +251,13 @@ export function AdminDashboard() {
                   </tr>
                 </thead>
                 <tbody>
-                  {visitors.map((visitor) => (
+                  {displayedVisitors.map((visitor) => (
                     <tr key={visitor.id} style={{ borderBottom: '1px solid rgba(244, 233, 221, 0.9)' }}>
-                      <td className="px-3 py-4">{visitor.displayName}</td>
+                      <td className="px-3 py-4">{visitor.name}</td>
                       <td className="px-3 py-4">{visitor.email}</td>
-                      <td className="px-3 py-4 whitespace-nowrap">{formatDate(visitor.firstVisitAt)}</td>
-                      <td className="px-3 py-4 whitespace-nowrap">{formatDate(visitor.lastVisitAt)}</td>
-                      <td className="px-3 py-4 text-center">{visitor.visitCount}</td>
+                      <td className="px-3 py-4 whitespace-nowrap">{formatDate(visitor.first_visit_at)}</td>
+                      <td className="px-3 py-4 whitespace-nowrap">{formatDate(visitor.last_visit_at)}</td>
+                      <td className="px-3 py-4 text-center">{visitor.visit_count}</td>
                     </tr>
                   ))}
                 </tbody>

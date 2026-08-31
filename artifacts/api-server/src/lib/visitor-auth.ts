@@ -1,4 +1,4 @@
-import { createHmac, randomBytes, timingSafeEqual } from "node:crypto";
+import { createHash, createHmac, randomBytes, timingSafeEqual } from "node:crypto";
 import type { Request, Response } from "express";
 
 export const SESSION_COOKIE = "birthday_session";
@@ -8,21 +8,22 @@ const OAUTH_STATE_MAX_AGE_SECONDS = 10 * 60;
 
 type OAuthState = {
   state: string;
+  codeVerifier: string;
+  codeChallenge: string;
   returnTo: string;
   createdAt: number;
 };
 
-type Session = {
-  visitorId: number;
-  googleSubject: string;
+export type Session = {
+  userId: string;
+  email: string;
+  displayName: string;
   expiresAt: number;
 };
 
 function getSessionSecret(): string {
   const secret = process.env.SESSION_SECRET;
-  if (!secret) {
-    throw new Error("SESSION_SECRET must be configured");
-  }
+  if (!secret) throw new Error("SESSION_SECRET must be configured");
   return secret;
 }
 
@@ -52,22 +53,55 @@ function verify(token: string): string | null {
   const value = decode(encoded);
   if (!value) return null;
 
-  const expectedSignature = signature(value);
-  const expected = Buffer.from(expectedSignature);
+  const expected = Buffer.from(signature(value));
   const provided = Buffer.from(providedSignature);
-  if (expected.length !== provided.length || !timingSafeEqual(expected, provided)) {
-    return null;
-  }
+  if (expected.length !== provided.length || !timingSafeEqual(expected, provided)) return null;
   return value;
 }
 
 function cookieOptions(maxAge: number) {
   return {
     httpOnly: true,
-    secure: true,
+    secure: process.env.NODE_ENV !== "development",
     sameSite: "lax" as const,
     path: "/",
     maxAge: maxAge * 1000,
+  };
+}
+
+export function getSupabaseConfig(): { url: string; anonKey: string } {
+  const url = process.env.SUPABASE_URL?.trim().replace(/\/+$/, "");
+  const anonKey = process.env.SUPABASE_ANON_KEY?.trim();
+  if (!url || !anonKey) {
+    throw new Error("Supabase is not configured. Set SUPABASE_URL and SUPABASE_ANON_KEY.");
+  }
+  return { url, anonKey };
+}
+
+export function getAdminEmail(): string {
+  const email = process.env.ADMIN_EMAIL?.trim().toLowerCase();
+  if (!email) throw new Error("ADMIN_EMAIL must be configured");
+  return email;
+}
+
+export function getSupabaseRedirectUri(req: Request): string {
+  const forwardedProto = req.header("x-forwarded-proto")?.split(",")[0]?.trim();
+  const forwardedHost = req.header("x-forwarded-host")?.split(",")[0]?.trim();
+  const protocol = forwardedProto || (process.env.NODE_ENV === "development" ? "http" : "https");
+  const host = forwardedHost || req.get("host");
+  if (!host) throw new Error("Unable to determine the application host");
+  return `${protocol}://${host}/api/auth/google/callback`;
+}
+
+export function createOAuthState(returnTo: string): OAuthState {
+  const codeVerifier = randomBytes(32).toString("base64url");
+  const codeChallenge = createHash("sha256").update(codeVerifier).digest("base64url");
+  return {
+    state: randomBytes(32).toString("base64url"),
+    codeVerifier,
+    codeChallenge,
+    returnTo,
+    createdAt: Date.now(),
   };
 }
 
@@ -88,6 +122,8 @@ export function readOAuthStateCookie(req: Request): OAuthState | null {
     const parsed = JSON.parse(value) as OAuthState;
     if (
       typeof parsed.state !== "string" ||
+      typeof parsed.codeVerifier !== "string" ||
+      typeof parsed.codeChallenge !== "string" ||
       typeof parsed.returnTo !== "string" ||
       typeof parsed.createdAt !== "number" ||
       Date.now() - parsed.createdAt > OAUTH_STATE_MAX_AGE_SECONDS * 1000
@@ -104,7 +140,10 @@ export function clearOAuthStateCookie(res: Response): void {
   res.clearCookie(OAUTH_STATE_COOKIE, { path: "/api/auth/google" });
 }
 
-export function setSessionCookie(res: Response, session: Omit<Session, "expiresAt">): void {
+export function setSessionCookie(
+  res: Response,
+  session: Omit<Session, "expiresAt">,
+): void {
   const payload: Session = {
     ...session,
     expiresAt: Date.now() + SESSION_MAX_AGE_SECONDS * 1000,
@@ -120,8 +159,9 @@ export function readSessionCookie(req: Request): Session | null {
   try {
     const parsed = JSON.parse(value) as Session;
     if (
-      !Number.isInteger(parsed.visitorId) ||
-      typeof parsed.googleSubject !== "string" ||
+      typeof parsed.userId !== "string" ||
+      typeof parsed.email !== "string" ||
+      typeof parsed.displayName !== "string" ||
       typeof parsed.expiresAt !== "number" ||
       parsed.expiresAt <= Date.now()
     ) {
@@ -143,39 +183,7 @@ export function isSafeReturnTo(value: unknown): value is string {
     value.startsWith("/") &&
     !value.startsWith("//") &&
     !value.includes("\\") &&
-    !value.includes("\n") &&
-    !value.includes("\r")
+    !value.includes("\r") &&
+    !value.includes("\n")
   );
-}
-
-export function getGoogleConfig(): { clientId: string; clientSecret: string; adminEmail: string } {
-  const clientId = process.env.GOOGLE_CLIENT_ID?.trim();
-  const clientSecret = process.env.GOOGLE_CLIENT_SECRET?.trim();
-  const adminEmail = process.env.ADMIN_EMAIL?.trim().toLowerCase();
-  if (!clientId || !clientSecret || !adminEmail) {
-    throw new Error(
-      "Google visitor tracking is not configured. Set GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, and ADMIN_EMAIL.",
-    );
-  }
-  return { clientId, clientSecret, adminEmail };
-}
-
-export function getGoogleRedirectUri(req: Request): string {
-  const configured = process.env.GOOGLE_REDIRECT_URI?.trim();
-  if (configured) return configured;
-
-  const forwardedProto = req.get("x-forwarded-proto")?.split(",")[0]?.trim();
-  const forwardedHost = req.get("x-forwarded-host")?.split(",")[0]?.trim();
-  const protocol = forwardedProto || req.protocol;
-  const host = forwardedHost || req.get("host");
-  if (!host) throw new Error("Unable to determine the Google OAuth redirect URI");
-  return `${protocol}://${host}/api/auth/google/callback`;
-}
-
-export function createOAuthState(returnTo: string): OAuthState {
-  return {
-    state: randomBytes(32).toString("hex"),
-    returnTo,
-    createdAt: Date.now(),
-  };
 }

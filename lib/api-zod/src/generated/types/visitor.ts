@@ -7,10 +7,12 @@
  */
 
 export interface Visitor {
-  id: number;
-  displayName: string;
+  id: string | number;
+  name: string;
   email: string;
-  firstVisitAt: Date;
-  lastVisitAt: Date;
-  visitCount: number;
+  first_visit_at: Date;
+  last_visit_at: Date;
+  visit_count: number;
+  created_at?: Date;
+  updated_at?: Date;
 }
