@@ -7,12 +7,8 @@
  */
 
 export interface Visitor {
-  id: string | number;
   name: string;
   email: string;
-  first_visit_at: Date;
-  last_visit_at: Date;
-  visit_count: number;
-  created_at?: Date;
-  updated_at?: Date;
+  visited_at: Date;
+  user_agent: string;
 }

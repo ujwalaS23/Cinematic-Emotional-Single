@@ -137,35 +137,20 @@ components:
     Visitor:
       type: object
       properties:
-        id:
-          oneOf:
-            - type: string
-            - type: integer
         name:
           type: string
         email:
           type: string
-        first_visit_at:
+        visited_at:
           type: string
           format: date-time
-        last_visit_at:
+        user_agent:
           type: string
-          format: date-time
-        visit_count:
-          type: integer
-        created_at:
-          type: string
-          format: date-time
-        updated_at:
-          type: string
-          format: date-time
       required:
-        - id
         - name
         - email
-        - first_visit_at
-        - last_visit_at
-        - visit_count
+        - visited_at
+        - user_agent
     VisitorList:
       type: object
       properties:

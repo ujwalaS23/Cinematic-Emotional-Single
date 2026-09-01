@@ -2,12 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 
 type Visitor = {
-  id: string | number;
+  id?: string | number;
   name: string;
   email: string;
-  first_visit_at: string;
-  last_visit_at: string;
-  visit_count: number;
+  visited_at: string;
+  user_agent: string;
 };
 
 function formatDate(value: string): string {
@@ -69,7 +68,7 @@ export function AdminDashboard() {
   }, [activeSearch, refreshKey]);
 
   const displayedVisitors = [...visitors].sort((a, b) => {
-    const difference = new Date(a.last_visit_at).getTime() - new Date(b.last_visit_at).getTime();
+    const difference = new Date(a.visited_at).getTime() - new Date(b.visited_at).getTime();
     return sortOrder === 'newest' ? -difference : difference;
   });
 
@@ -245,19 +244,17 @@ export function AdminDashboard() {
                   <tr style={{ borderBottom: '1px solid rgba(217, 165, 165, 0.55)', color: '#9E7E6E' }}>
                     <th className="px-3 py-3 font-normal">Visitor name</th>
                     <th className="px-3 py-3 font-normal">Email address</th>
-                    <th className="px-3 py-3 font-normal whitespace-nowrap">First visit</th>
-                    <th className="px-3 py-3 font-normal whitespace-nowrap">Last visit</th>
-                    <th className="px-3 py-3 font-normal text-center">Visits</th>
+                    <th className="px-3 py-3 font-normal whitespace-nowrap">Visited at</th>
+                    <th className="px-3 py-3 font-normal">Browser</th>
                   </tr>
                 </thead>
                 <tbody>
                   {displayedVisitors.map((visitor) => (
-                    <tr key={visitor.id} style={{ borderBottom: '1px solid rgba(244, 233, 221, 0.9)' }}>
+                    <tr key={`${visitor.email}-${visitor.visited_at}`} style={{ borderBottom: '1px solid rgba(244, 233, 221, 0.9)' }}>
                       <td className="px-3 py-4">{visitor.name}</td>
                       <td className="px-3 py-4">{visitor.email}</td>
-                      <td className="px-3 py-4 whitespace-nowrap">{formatDate(visitor.first_visit_at)}</td>
-                      <td className="px-3 py-4 whitespace-nowrap">{formatDate(visitor.last_visit_at)}</td>
-                      <td className="px-3 py-4 text-center">{visitor.visit_count}</td>
+                      <td className="px-3 py-4 whitespace-nowrap">{formatDate(visitor.visited_at)}</td>
+                      <td className="px-3 py-4 max-w-xs truncate" title={visitor.user_agent}>{visitor.user_agent}</td>
                     </tr>
                   ))}
                 </tbody>

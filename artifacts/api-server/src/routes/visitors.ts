@@ -15,8 +15,7 @@ import {
 } from "../lib/visitor-auth";
 
 const router: IRouter = Router();
-const VISITOR_SELECT = "id,name,email,first_visit_at,last_visit_at,visit_count,created_at,updated_at";
-const AUTH_VISITOR_SELECT = `id,user_id,${VISITOR_SELECT.slice(3)}`;
+const VISITOR_SELECT = "email,name,visited_at,user_agent";
 
 type SupabaseUser = {
   id?: string;
@@ -33,15 +32,10 @@ type SupabaseSessionResponse = {
 };
 
 type VisitorRow = {
-  id: string | number;
-  user_id: string;
-  name: string;
   email: string;
-  first_visit_at: string;
-  last_visit_at: string;
-  visit_count: number;
-  created_at?: string;
-  updated_at?: string;
+  name: string;
+  visited_at: string;
+  user_agent: string;
 };
 
 function redirectWithError(returnTo: string, error: string): string {
@@ -50,7 +44,7 @@ function redirectWithError(returnTo: string, error: string): string {
 }
 
 function getServiceRoleConfig(): { url: string; key: string } | null {
-  const url = process.env.SUPABASE_URL?.trim().replace(/\/+$/, "");
+  const url = (process.env.SUPABASE_URL || process.env.supabase_url)?.trim().replace(/\/+$/, "");
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
   return url && key ? { url, key } : null;
 }
@@ -72,6 +66,18 @@ async function supabaseRequest(path: string, init: RequestInit = {}): Promise<gl
   });
 }
 
+async function supabaseAuthenticatedRequest(
+  path: string,
+  accessToken: string,
+  init: RequestInit = {},
+): Promise<globalThis.Response> {
+  const config = getSupabaseConfig();
+  const headers = new Headers(init.headers);
+  headers.set("apikey", config.anonKey);
+  headers.set("Authorization", `Bearer ${accessToken}`);
+  return fetch(`${config.url}${path}`, { ...init, headers });
+}
+
 async function parseSupabaseError(response: globalThis.Response): Promise<string> {
   try {
     const body = (await response.clone().json()) as { message?: string; error?: string };
@@ -81,89 +87,31 @@ async function parseSupabaseError(response: globalThis.Response): Promise<string
   }
 }
 
-async function requireVisitor(req: Request, res: ExpressResponse): Promise<{ session: ReturnType<typeof readSessionCookie>; visitor: VisitorRow } | null> {
+async function requireVisitor(req: Request, res: ExpressResponse): Promise<ReturnType<typeof readSessionCookie> | null> {
   const session = readSessionCookie(req);
   if (!session) {
     res.status(401).json({ error: "Authentication required" });
     return null;
   }
-
-  const response = await supabaseRequest(
-    `/rest/v1/visitors?select=${AUTH_VISITOR_SELECT}&user_id=eq.${encodeURIComponent(session.userId)}&limit=1`,
-  );
-  if (!response.ok) {
-    res.status(503).json({ error: "Visitor records are temporarily unavailable." });
-    return null;
-  }
-  const visitors = (await response.json()) as VisitorRow[];
-  const visitor = visitors[0];
-  if (!visitor) {
-    clearSessionCookie(res);
-    res.status(401).json({ error: "Your session has expired. Please sign in again." });
-    return null;
-  }
-  return { session, visitor };
+  return session;
 }
 
-async function recordVisitor(user: SupabaseUser): Promise<VisitorRow> {
+async function recordVisitor(user: SupabaseUser, accessToken: string, userAgent: string): Promise<void> {
   if (!user.id || !user.email) throw new Error("Supabase did not return a complete user profile");
   const email = user.email.trim().toLowerCase();
   const name = user.user_metadata?.full_name?.trim() || user.user_metadata?.name?.trim() || email.split("@")[0];
 
-  const rpcResponse = await supabaseRequest("/rest/v1/rpc/record_visitor_visit", {
+  const response = await supabaseAuthenticatedRequest("/rest/v1/visitors", accessToken, {
     method: "POST",
     headers: { "Content-Type": "application/json", Accept: "application/json" },
-    body: JSON.stringify({ p_user_id: user.id, p_name: name, p_email: email }),
+    body: JSON.stringify({
+      email,
+      name,
+      visited_at: new Date().toISOString(),
+      user_agent: userAgent.slice(0, 1000),
+    }),
   });
-  if (rpcResponse.ok) {
-    const result = (await rpcResponse.json()) as VisitorRow | VisitorRow[];
-    return Array.isArray(result) ? result[0] : result;
-  }
-
-  // The SQL helper is recommended for atomic increments. This fallback keeps
-  // the app usable if the table exists before the helper function is created.
-  const existingResponse = await supabaseRequest(
-    `/rest/v1/visitors?select=${AUTH_VISITOR_SELECT}&user_id=eq.${encodeURIComponent(user.id)}&limit=1`,
-  );
-  if (!existingResponse.ok) throw new Error(await parseSupabaseError(existingResponse));
-  const existing = ((await existingResponse.json()) as VisitorRow[])[0];
-
-  if (!existing) {
-    const insertResponse = await supabaseRequest("/rest/v1/visitors", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Prefer: "return=representation,resolution=ignore-duplicates",
-      },
-      body: JSON.stringify({ user_id: user.id, name, email, visit_count: 1 }),
-    });
-    if (!insertResponse.ok) throw new Error(await parseSupabaseError(insertResponse));
-    const inserted = (await insertResponse.json()) as VisitorRow[];
-    if (inserted[0]) return inserted[0];
-  }
-
-  const visitor = existing || ((await supabaseRequest(
-    `/rest/v1/visitors?select=${AUTH_VISITOR_SELECT}&user_id=eq.${encodeURIComponent(user.id)}&limit=1`,
-  ).then((response) => response.json())) as VisitorRow[])[0];
-  if (!visitor) throw new Error("Visitor record could not be saved");
-
-  const updateResponse = await supabaseRequest(
-    `/rest/v1/visitors?user_id=eq.${encodeURIComponent(user.id)}`,
-    {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json", Accept: "application/json", Prefer: "return=representation" },
-      body: JSON.stringify({
-        name,
-        email,
-        last_visit_at: new Date().toISOString(),
-        visit_count: visitor.visit_count + 1,
-        updated_at: new Date().toISOString(),
-      }),
-    },
-  );
-  if (!updateResponse.ok) throw new Error(await parseSupabaseError(updateResponse));
-  return ((await updateResponse.json()) as VisitorRow[])[0] || visitor;
+  if (!response.ok) throw new Error(await parseSupabaseError(response));
 }
 
 router.get("/auth/google/login", async (req, res): Promise<void> => {
@@ -224,11 +172,15 @@ router.get("/auth/google/callback", async (req, res): Promise<void> => {
       throw new Error("Supabase did not return a complete authenticated user");
     }
 
-    const visitor = await recordVisitor(auth.user);
+    await recordVisitor(auth.user, auth.access_token, req.get("user-agent") || "unknown");
+    const displayName =
+      auth.user.user_metadata?.full_name?.trim() ||
+      auth.user.user_metadata?.name?.trim() ||
+      auth.user.email;
     setSessionCookie(res, {
       userId: auth.user.id,
-      email: visitor.email,
-      displayName: visitor.name,
+      email: auth.user.email,
+      displayName,
     });
     res.redirect(returnTo);
   } catch (error) {
@@ -247,15 +199,15 @@ router.get("/auth/me", async (req, res): Promise<void> => {
 
   let isAdmin = false;
   try {
-    isAdmin = result.visitor.email.trim().toLowerCase() === getAdminEmail();
+    isAdmin = result.email.trim().toLowerCase() === getAdminEmail();
   } catch {
     isAdmin = false;
   }
   res.json({
     authenticated: true,
     isAdmin,
-    email: result.visitor.email,
-    displayName: result.visitor.name,
+    email: result.email,
+    displayName: result.displayName,
   });
 });
 
@@ -275,13 +227,13 @@ router.get("/admin/visitors", async (req, res): Promise<void> => {
     res.status(503).json({ error: "The administrator account is not configured yet." });
     return;
   }
-  if (result.visitor.email.trim().toLowerCase() !== adminEmail) {
+  if (result.email.trim().toLowerCase() !== adminEmail) {
     res.status(403).json({ error: "Admin access required" });
     return;
   }
 
   const response = await supabaseRequest(
-    `/rest/v1/visitors?select=${VISITOR_SELECT}&order=last_visit_at.desc&limit=1000`,
+    `/rest/v1/visitors?select=${VISITOR_SELECT}&order=visited_at.desc&limit=1000`,
   );
   if (!response.ok) {
     res.status(503).json({ error: "Visitor records could not be loaded right now." });
@@ -297,8 +249,8 @@ router.get("/admin/visitors", async (req, res): Promise<void> => {
 
   res.json({
     visitors,
-    totalVisitors: allVisitors.length,
-    totalVisits: allVisitors.reduce((total, visitor) => total + Number(visitor.visit_count || 0), 0),
+    totalVisitors: new Set(allVisitors.map((visitor) => visitor.email.toLowerCase())).size,
+    totalVisits: allVisitors.length,
     recentVisitors: allVisitors.slice(0, 5),
   });
 });

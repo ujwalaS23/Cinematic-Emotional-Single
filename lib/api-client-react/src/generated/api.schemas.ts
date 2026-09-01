@@ -17,14 +17,10 @@ export interface AuthStatus {
 }
 
 export interface Visitor {
-  id: string | number;
   name: string;
   email: string;
-  first_visit_at: string;
-  last_visit_at: string;
-  visit_count: number;
-  created_at?: string;
-  updated_at?: string;
+  visited_at: string;
+  user_agent: string;
 }
 
 export interface VisitorList {

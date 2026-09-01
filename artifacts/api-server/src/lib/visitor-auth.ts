@@ -70,7 +70,7 @@ function cookieOptions(maxAge: number) {
 }
 
 export function getSupabaseConfig(): { url: string; anonKey: string } {
-  const url = process.env.SUPABASE_URL?.trim().replace(/\/+$/, "");
+  const url = (process.env.SUPABASE_URL || process.env.supabase_url)?.trim().replace(/\/+$/, "");
   const anonKey = process.env.SUPABASE_ANON_KEY?.trim();
   if (!url || !anonKey) {
     throw new Error("Supabase is not configured. Set SUPABASE_URL and SUPABASE_ANON_KEY.");
