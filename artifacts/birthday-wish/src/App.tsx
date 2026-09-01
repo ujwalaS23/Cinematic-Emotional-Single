@@ -27,7 +27,10 @@ function App() {
   useEffect(() => {
     fetch('/api/auth/me', { credentials: 'include' })
       .then((response) => (response.ok ? response.json() : Promise.reject(new Error('Auth status unavailable'))))
-      .then((data: AuthStatus) => setAuth(data))
+      .then((data: AuthStatus) => {
+        setAuth(data);
+        if (data.authenticated) setOpened(true);
+      })
       .catch(() => setAuth({ authenticated: false, isAdmin: false }));
   }, []);
 
@@ -70,7 +73,6 @@ function App() {
         {!opened && !isAdminPath && (
           <WaxSealScreen
             key="seal"
-            onOpen={() => setOpened(true)}
             onGoogleLogin={startGoogleLogin}
             authError={authError}
           />
