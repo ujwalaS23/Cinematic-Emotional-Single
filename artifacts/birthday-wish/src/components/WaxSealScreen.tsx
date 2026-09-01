@@ -74,7 +74,7 @@ export function WaxSealScreen({
         </h1>
         <p
           id="surprise-description"
-          className="mb-7"
+          className={authError ? 'mb-3' : 'mb-7'}
           style={{
             color: '#6B4C3B',
             fontFamily: '"Crimson Pro", serif',
@@ -84,6 +84,21 @@ export function WaxSealScreen({
         >
           Continue with Google to enter <span aria-hidden="true">❤️</span>
         </p>
+
+        {authError && (
+          <p
+            role="alert"
+            className="mb-4"
+            style={{
+              color: '#9E3A3A',
+              fontFamily: '"Crimson Pro", serif',
+              fontSize: '0.95rem',
+              lineHeight: 1.4,
+            }}
+          >
+            {authError}
+          </p>
+        )}
 
         <button
           type="button"
@@ -110,33 +125,6 @@ export function WaxSealScreen({
           </span>
           Continue with Google
         </button>
-
-        <p
-          className="mx-auto mt-4 max-w-xs"
-          style={{
-            color: '#9E7E6E',
-            fontFamily: '"Crimson Pro", serif',
-            fontSize: '0.92rem',
-            lineHeight: 1.45,
-          }}
-        >
-          By continuing with Google, you allow this website to receive your Google name and email address for visitor tracking.
-        </p>
-
-        {authError && (
-          <p
-            role="alert"
-            className="mt-4"
-            style={{
-              color: '#9E3A3A',
-              fontFamily: '"Crimson Pro", serif',
-              fontSize: '0.95rem',
-              lineHeight: 1.4,
-            }}
-          >
-            {authError}
-          </p>
-        )}
       </motion.div>
     </motion.div>
   );
