@@ -52,7 +52,9 @@ function getServiceRoleConfig(): { url: string; key: string } | null {
   const url = (process.env.SUPABASE_URL || process.env.supabase_url)
     ?.trim()
     .replace(/\/+$/, "");
+
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
+
   return url && key ? { url, key } : null;
 }
 
@@ -64,6 +66,7 @@ async function supabaseRequest(
 
   if (serviceConfig) {
     const headers = new Headers(init.headers);
+
     headers.set("apikey", serviceConfig.key);
     headers.set("Authorization", `Bearer ${serviceConfig.key}`);
 
@@ -90,6 +93,7 @@ async function supabaseAuthenticatedRequest(
   const config = getSupabaseConfig();
 
   const headers = new Headers(init.headers);
+
   headers.set("apikey", config.anonKey);
   headers.set("Authorization", `Bearer ${accessToken}`);
 
@@ -127,7 +131,10 @@ async function requireVisitor(
   const session = readSessionCookie(req);
 
   if (!session) {
-    res.status(401).json({ error: "Authentication required" });
+    res.status(401).json({
+      error: "Authentication required",
+    });
+
     return null;
   }
 
@@ -158,6 +165,7 @@ async function recordVisitor(
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
+        Prefer: "return=minimal",
       },
       body: JSON.stringify({
         email,
@@ -176,11 +184,8 @@ async function recordVisitor(
 /*
  * GOOGLE LOGIN
  *
- * Important:
- * Do NOT send our own OAuth `state` parameter to Supabase.
- * Supabase Auth creates and validates its own OAuth flow state.
- *
- * We only store our PKCE verifier and the page to return to.
+ * Supabase manages its own OAuth state.
+ * We only keep our own PKCE verifier and return URL.
  */
 router.get("/auth/google/login", async (req, res): Promise<void> => {
   try {
@@ -191,14 +196,27 @@ router.get("/auth/google/login", async (req, res): Promise<void> => {
       : "/";
 
     const oauthState = createOAuthState(returnTo);
+
     setOAuthStateCookie(res, oauthState);
 
-    const authorizeUrl = new URL(`${config.url}/auth/v1/authorize`);
+    const authorizeUrl = new URL(
+      `${config.url}/auth/v1/authorize`,
+    );
+
     authorizeUrl.searchParams.set("provider", "google");
-    authorizeUrl.searchParams.set("redirect_to", getSupabaseRedirectUri(req));
+    authorizeUrl.searchParams.set(
+      "redirect_to",
+      getSupabaseRedirectUri(req),
+    );
     authorizeUrl.searchParams.set("flow_type", "pkce");
-    authorizeUrl.searchParams.set("code_challenge", oauthState.codeChallenge);
-    authorizeUrl.searchParams.set("code_challenge_method", "s256");
+    authorizeUrl.searchParams.set(
+      "code_challenge",
+      oauthState.codeChallenge,
+    );
+    authorizeUrl.searchParams.set(
+      "code_challenge_method",
+      "s256",
+    );
 
     res.redirect(authorizeUrl.toString());
   } catch (error) {
@@ -216,6 +234,8 @@ router.get("/auth/google/login", async (req, res): Promise<void> => {
 
 /*
  * GOOGLE CALLBACK
+ *
+ * This is retained for the authorization-code/PKCE flow.
  */
 router.get("/auth/google/callback", async (req, res): Promise<void> => {
   const oauthState = readOAuthStateCookie(req);
@@ -233,12 +253,17 @@ router.get("/auth/google/callback", async (req, res): Promise<void> => {
           ? req.query.error_description
           : "Google sign-in was cancelled.";
 
-      res.redirect(redirectWithError(returnTo, description));
+      res.redirect(
+        redirectWithError(returnTo, description),
+      );
 
       return;
     }
 
-    const code = typeof req.query.code === "string" ? req.query.code : null;
+    const code =
+      typeof req.query.code === "string"
+        ? req.query.code
+        : null;
 
     if (!oauthState || !code) {
       res.redirect(
@@ -253,11 +278,6 @@ router.get("/auth/google/callback", async (req, res): Promise<void> => {
 
     const config = getSupabaseConfig();
 
-    /*
-     * Exchange the Supabase authorization code using
-     * the SAME PKCE verifier created before redirecting
-     * the user to Google.
-     */
     const tokenResponse = await fetch(
       `${config.url}/auth/v1/token?grant_type=pkce`,
       {
@@ -275,15 +295,22 @@ router.get("/auth/google/callback", async (req, res): Promise<void> => {
     );
 
     if (!tokenResponse.ok) {
-      const supabaseError = await parseSupabaseError(tokenResponse);
-
-      throw new Error(supabaseError);
+      throw new Error(
+        await parseSupabaseError(tokenResponse),
+      );
     }
 
-    const auth = (await tokenResponse.json()) as SupabaseSessionResponse;
+    const auth =
+      (await tokenResponse.json()) as SupabaseSessionResponse;
 
-    if (!auth.access_token || !auth.user?.id || !auth.user.email) {
-      throw new Error("Supabase did not return a complete authenticated user");
+    if (
+      !auth.access_token ||
+      !auth.user?.id ||
+      !auth.user.email
+    ) {
+      throw new Error(
+        "Supabase did not return a complete authenticated user",
+      );
     }
 
     const displayName =
@@ -291,18 +318,12 @@ router.get("/auth/google/callback", async (req, res): Promise<void> => {
       auth.user.user_metadata?.name?.trim() ||
       auth.user.email;
 
-    /*
-     * Create our existing application session.
-     */
     setSessionCookie(res, {
       userId: auth.user.id,
       email: auth.user.email,
       displayName,
     });
 
-    /*
-     * Visitor tracking must NEVER prevent successful login.
-     */
     try {
       await recordVisitor(
         auth.user,
@@ -316,26 +337,146 @@ router.get("/auth/google/callback", async (req, res): Promise<void> => {
       );
     }
 
-    /*
-     * Login succeeded.
-     */
     res.redirect(returnTo);
   } catch (error) {
-    req.log.error({ err: error }, "Supabase Google sign-in failed");
+    req.log.error(
+      { err: error },
+      "Supabase Google sign-in failed",
+    );
 
-    /*
-     * Include the actual Supabase error so that if something
-     * remains wrong, we can see the real reason instead of
-     * getting sent back to the login screen with no explanation.
-     */
     const message =
       error instanceof Error
         ? error.message
         : "Google sign-in could not be completed.";
 
     res.redirect(
-      redirectWithError(returnTo, `Google sign-in failed: ${message}`),
+      redirectWithError(
+        returnTo,
+        `Google sign-in failed: ${message}`,
+      ),
     );
+  }
+});
+
+/*
+ * CREATE OUR APPLICATION SESSION
+ *
+ * Supabase is currently returning the authenticated session
+ * in the URL hash:
+ *
+ * #access_token=...
+ *
+ * App.tsx sends that access token here.
+ *
+ * We validate it with Supabase and then create our own
+ * secure birthday_session cookie.
+ */
+router.post("/auth/session", async (req, res): Promise<void> => {
+  try {
+    const accessToken =
+      typeof req.body?.access_token === "string"
+        ? req.body.access_token.trim()
+        : "";
+
+    if (!accessToken) {
+      res.status(400).json({
+        error: "Access token is required",
+      });
+
+      return;
+    }
+
+    const config = getSupabaseConfig();
+
+    const response = await fetch(
+      `${config.url}/auth/v1/user`,
+      {
+        method: "GET",
+        headers: {
+          apikey: config.anonKey,
+          Authorization: `Bearer ${accessToken}`,
+          Accept: "application/json",
+        },
+      },
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+
+      req.log.error(
+        {
+          status: response.status,
+          error: errorText,
+        },
+        "Supabase rejected the access token",
+      );
+
+      res.status(401).json({
+        error: "Invalid Supabase session",
+        details: errorText,
+      });
+
+      return;
+    }
+
+    const user =
+      (await response.json()) as SupabaseUser;
+
+    if (!user.id || !user.email) {
+      res.status(401).json({
+        error: "Supabase returned an incomplete user profile",
+      });
+
+      return;
+    }
+
+    const email = user.email.trim().toLowerCase();
+
+    const displayName =
+      user.user_metadata?.full_name?.trim() ||
+      user.user_metadata?.name?.trim() ||
+      email;
+
+    /*
+     * Create the application's normal session cookie.
+     */
+    setSessionCookie(res, {
+      userId: user.id,
+      email,
+      displayName,
+    });
+
+    /*
+     * Record the visitor.
+     * Failure here must NOT prevent login.
+     */
+    try {
+      await recordVisitor(
+        user,
+        accessToken,
+        req.get("user-agent") || "unknown",
+      );
+    } catch (error) {
+      req.log.error(
+        { err: error },
+        "Visitor could not be recorded after Supabase login",
+      );
+    }
+
+    res.status(200).json({
+      authenticated: true,
+      email,
+      displayName,
+    });
+  } catch (error) {
+    req.log.error(
+      { err: error },
+      "Could not create application session",
+    );
+
+    res.status(500).json({
+      error: "Could not create application session",
+    });
   }
 });
 
@@ -361,7 +502,9 @@ router.get("/auth/me", async (req, res): Promise<void> => {
   let isAdmin = false;
 
   try {
-    isAdmin = result.email.trim().toLowerCase() === getAdminEmail();
+    isAdmin =
+      result.email.trim().toLowerCase() ===
+      getAdminEmail();
   } catch {
     isAdmin = false;
   }
@@ -402,7 +545,10 @@ router.get("/admin/visitors", async (req, res): Promise<void> => {
     return;
   }
 
-  if (result.email.trim().toLowerCase() !== adminEmail) {
+  if (
+    result.email.trim().toLowerCase() !==
+    adminEmail
+  ) {
     res.status(403).json({
       error: "Admin access required",
     });
@@ -422,75 +568,34 @@ router.get("/admin/visitors", async (req, res): Promise<void> => {
     return;
   }
 
-  const allVisitors = (await response.json()) as VisitorRow[];
+  const allVisitors =
+    (await response.json()) as VisitorRow[];
 
   const rawQuery =
-    typeof req.query.q === "string" ? req.query.q.trim().slice(0, 100) : "";
+    typeof req.query.q === "string"
+      ? req.query.q.trim().slice(0, 100)
+      : "";
 
   const query = rawQuery.toLocaleLowerCase();
 
   const visitors = query
     ? allVisitors.filter((visitor) =>
-        `${visitor.name} ${visitor.email}`.toLocaleLowerCase().includes(query),
+        `${visitor.name} ${visitor.email}`
+          .toLocaleLowerCase()
+          .includes(query),
       )
     : allVisitors;
 
   res.json({
     visitors,
     totalVisitors: new Set(
-      allVisitors.map((visitor) => visitor.email.toLowerCase()),
+      allVisitors.map(
+        (visitor) => visitor.email.toLowerCase(),
+      ),
     ).size,
     totalVisits: allVisitors.length,
     recentVisitors: allVisitors.slice(0, 5),
   });
-});
-router.post("/auth/session", async (req, res): Promise<void> => {
-  try {
-    const accessToken =
-      typeof req.body?.access_token === "string" ? req.body.access_token : null;
-
-    if (!accessToken) {
-      res.status(400).json({ error: "Access token is required" });
-      return;
-    }
-
-    const config = getSupabaseConfig();
-
-    const response = await fetch(`${config.url}/auth/v1/user`, {
-      headers: {
-        apikey: config.anonKey,
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-
-    if (!response.ok) {
-      res.status(401).json({ error: "Invalid Supabase session" });
-      return;
-    }
-
-    const user = (await response.json()) as SupabaseUser;
-
-    if (!user.id || !user.email) {
-      res.status(401).json({ error: "Incomplete Supabase user" });
-      return;
-    }
-
-    const displayName =
-      user.user_metadata?.full_name?.trim() ||
-      user.user_metadata?.name?.trim() ||
-      user.email;
-
-    setSessionCookie(res, {
-      userId: user.id,
-      email: user.email,
-      displayName,
-    });
-
-    res.json({ authenticated: true });
-  } catch (error) {
-    req.log.error({ err: error }, "Could not create application session");
-    res.status(500).json({ error: "Could not create session" });
-  }
 });
 
 export default router;
