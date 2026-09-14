@@ -1,0 +1,252 @@
+I need you to fully inspect and fix my EXISTING Replit project. This is an existing birthday-wish website, so DO NOT redesign it, rewrite the birthday letter, remove existing content, or replace the current UI unnecessarily.
+
+IMPORTANT: I have very limited Replit Agent prompt access, so treat this as ONE COMPLETE TASK. Please inspect the existing project/code first, identify the current architecture, and implement ALL required fixes in this single task.
+
+PROJECT PURPOSE:
+This is a private/personal birthday-wish website for an external visitor. The visitor must first sign in with Google, and after successful authentication they should be taken to the existing birthday letter/website. The app also has Supabase visitor tracking/database functionality and a private dashboard that was previously being configured.
+
+CURRENT PUBLISHED WEBSITE:
+https://cinematic-emotional-single--ujwalashivakoti.replit.app
+
+SUPABASE PROJECT:
+Supabase is already connected/configured in the project.
+
+SUPABASE GOOGLE CALLBACK:
+https://dilxvwrkzbiivjfusctf.supabase.co/auth/v1/callback
+
+GOOGLE OAUTH:
+Google OAuth has already been configured.
+The current Authorized JavaScript origin is:
+https://cinematic-emotional-single--ujwalashivakoti.replit.app
+
+The current Authorized redirect URI is:
+https://dilxvwrkzbiivjfusctf.supabase.co/auth/v1/callback
+
+The Gmail account being used for testing has already been added as a Google OAuth test user.
+
+CURRENT PROBLEM:
+Google authentication itself now works. When I open the published site in a fresh/incognito session and click "Continue with Google", Google allows me to authenticate successfully.
+
+However, after successful Google authentication, instead of entering the birthday website/letter, the app returns to the same "Continue with Google" page.
+
+Therefore the Google OAuth credentials are NOT the main problem anymore.
+
+The likely problem is the Supabase authentication callback/session handling or the React application's session detection/redirect logic.
+
+YOUR TASK:
+Fix the complete authentication flow so that:
+
+1. User opens the published website.
+2. If there is no valid Supabase session, show the existing "Continue with Google" login page.
+3. User clicks "Continue with Google".
+4. Use the EXISTING Supabase Google OAuth implementation if one already exists.
+5. Google authentication completes successfully.
+6. Supabase callback completes successfully.
+7. The Supabase session is correctly established and persisted in the browser.
+8. The application detects the authenticated session using the correct Supabase auth state/session mechanism.
+9. The user is NOT redirected back to the login page after successful authentication.
+10. The user is taken to the EXISTING birthday letter/website.
+11. Refreshing the page while authenticated must NOT send the user back to "Continue with Google".
+12. Closing and reopening the browser should preserve the Supabase session according to the normal Supabase persistence behavior.
+13. If the user explicitly signs out, then they should correctly return to the login page.
+14. Do not create an authentication loop.
+
+VERY IMPORTANT SESSION REQUIREMENTS:
+Inspect the existing Supabase client initialization and make sure there is only one properly configured Supabase client where appropriate.
+
+Check for:
+
+* createClient configuration
+* Supabase URL
+* Supabase anon/public key
+* persistSession
+* autoRefreshToken
+* detectSessionInUrl
+* onAuthStateChange
+* getSession
+* OAuth callback handling
+* URL hash/query parameter handling
+* React state initialization
+* loading/authentication state
+* protected route logic
+* redirects
+* race conditions between getSession() and onAuthStateChange()
+
+Make the authentication flow robust against the OAuth callback being processed asynchronously.
+
+Do NOT simply add a timeout or arbitrary delay as a workaround.
+
+If the project uses React Router or another routing system, inspect and fix the route/redirect logic properly.
+
+If OAuth returns to the published Replit URL, make sure the app correctly processes the returned Supabase authentication session before deciding that the user is unauthenticated.
+
+IMPORTANT EXISTING CONTENT:
+The birthday letter/content already in this project is extremely important.
+
+DO NOT:
+
+* rewrite the birthday letter
+* shorten the birthday letter
+* replace the emotional wording
+* remove animations
+* remove existing sections
+* redesign the website
+* replace the existing page with a generic login page
+* create a new unrelated birthday website
+* remove existing images/music/animations
+* remove existing functionality that is already working
+
+Preserve the existing visual design and birthday experience exactly as much as possible.
+
+Only modify what is necessary to correctly implement authentication, session persistence, visitor tracking, and the required redirects.
+
+SUPABASE VISITOR TRACKING:
+The project previously included a Supabase "visitors" table and Google-login visitor tracking.
+
+Preserve the existing visitor database functionality if it is already implemented.
+
+After successful authentication, if the project is designed to record the visitor:
+
+* obtain the authenticated user's Supabase user information
+* record/update the visitor appropriately in the existing visitors table
+* do not create duplicate records unnecessarily if the existing design expects one record per user
+* do not expose private dashboard/database information to normal visitors
+
+If the existing visitors table/database code has an error, fix it without destroying existing data or changing the database structure unnecessarily.
+
+PRIVATE DASHBOARD:
+There was also a private dashboard for viewing visitor information.
+
+Preserve it if it already exists.
+
+The dashboard must NOT become publicly accessible merely because Google authentication is working.
+
+If the project already has an admin/dashboard authentication mechanism, preserve and repair it rather than replacing it.
+
+Do not expose Supabase service-role keys or other secret credentials in frontend code.
+
+SECURITY:
+
+* Never put a Supabase service-role key in client-side code.
+* Never expose Google client secrets in frontend code.
+* Use only the public Supabase anon/publishable key where appropriate.
+* Do not hardcode passwords.
+* Do not bypass authentication just to make the birthday letter open.
+* Do not remove authentication checks.
+* Do not make the dashboard publicly accessible.
+* Do not disable OAuth security/state verification.
+
+ENVIRONMENT VARIABLES:
+Inspect the existing Replit Secrets/environment variables and existing code.
+
+Use the project's existing environment variable names wherever possible.
+
+Do not unnecessarily create duplicate variables.
+
+If the current frontend framework requires VITE_ variables or another specific naming convention, correctly use the framework's existing convention.
+
+IMPORTANT DEPLOYMENT REQUIREMENT:
+The site is deployed at:
+
+https://cinematic-emotional-single--ujwalashivakoti.replit.app
+
+Make sure the application works correctly on the published HTTPS URL, not just localhost.
+
+Do not change the published domain unless absolutely necessary.
+
+Do not assume localhost is the production URL.
+
+HANDLE OAUTH CALLBACK CORRECTLY:
+Inspect exactly how the current app receives the OAuth response.
+
+If using Supabase's standard browser OAuth flow, ensure the callback/session is handled according to the current Supabase approach.
+
+Do not invent a custom OAuth implementation if the existing Supabase implementation can be repaired.
+
+If the app currently redirects to the login page before Supabase has finished restoring the session, introduce a proper initial loading/authentication state so the login page is not displayed prematurely.
+
+For example, the application should conceptually behave like:
+
+INITIALIZING
+→ check existing Supabase session
+→ wait for OAuth callback/session restoration if applicable
+→ authenticated = show birthday website
+→ unauthenticated = show Continue with Google
+
+Do not redirect simply because the initial session value is temporarily null while authentication is still initializing.
+
+TEST THE FOLLOWING FLOWS:
+After making changes, test or reason through all of these:
+
+TEST 1:
+Fresh/incognito browser
+→ published URL
+→ Continue with Google
+→ Google account
+→ successful authorization
+→ birthday letter opens.
+
+TEST 2:
+After successful login
+→ refresh page
+→ birthday letter remains accessible
+→ no return to Continue with Google.
+
+TEST 3:
+Close/reopen browser
+→ authenticated session remains according to Supabase persistence
+→ birthday letter remains accessible.
+
+TEST 4:
+Sign out
+→ login page appears
+→ Continue with Google is required again.
+
+TEST 5:
+Unauthorized user
+→ cannot access private dashboard.
+
+TEST 6:
+OAuth callback
+→ no infinite redirect loop
+→ no repeated Continue with Google page.
+
+IMPORTANT: BEFORE EDITING:
+Inspect the current files and identify:
+
+* framework
+* entry point
+* routing
+* authentication component
+* Supabase client file
+* login component
+* protected/authenticated content
+* dashboard
+* visitor tracking
+* environment variables
+
+Then make the minimum necessary changes across the project.
+
+DO NOT ask me to manually edit multiple files if you can safely make the changes yourself.
+
+DO NOT stop after identifying the problem. Implement the complete fix.
+
+DO NOT just tell me what I should change. Actually modify the project.
+
+AFTER IMPLEMENTATION:
+Run/build the project if possible and fix any resulting TypeScript, JavaScript, React, routing, or Supabase errors.
+
+Make sure there are no obvious compile errors.
+
+Then give me a concise final report containing:
+
+1. What caused the authentication loop.
+2. What files you changed.
+3. What you changed in each file.
+4. Whether the Google → Supabase → authenticated birthday-letter flow is now correctly implemented.
+5. Whether I need to change anything manually in Google Cloud or Supabase.
+
+Do NOT make unnecessary UI/design changes.
+
+The highest priority is:
+EXISTING BIRTHDAY WEBSITE + EXISTING LETTER PRESERVED + GOOGLE LOGIN WORKS + SUPABASE SESSION PERSISTS + USER REACHES THE BIRTHDAY LETTER AFTER LOGIN + NO AUTHENTICATION LOOP.
