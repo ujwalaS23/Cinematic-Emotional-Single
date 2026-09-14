@@ -20,18 +20,31 @@ type AuthStatus = {
 function App() {
   const [opened, setOpened] = useState(false);
   const [auth, setAuth] = useState<AuthStatus | null>(null);
+  const [authLoading, setAuthLoading] = useState(true);
   const isAdminPath = window.location.pathname.replace(/\/+$/, '') === '/admin/visitors';
   const contentVisible = opened || isAdminPath;
   const authError = new URLSearchParams(window.location.search).get('authError');
 
   useEffect(() => {
-    fetch('/api/auth/me', { credentials: 'include' })
+    let active = true;
+
+    fetch('/api/auth/me', { credentials: 'include', cache: 'no-store' })
       .then((response) => (response.ok ? response.json() : Promise.reject(new Error('Auth status unavailable'))))
       .then((data: AuthStatus) => {
+        if (!active) return;
         setAuth(data);
         if (data.authenticated) setOpened(true);
       })
-      .catch(() => setAuth({ authenticated: false, isAdmin: false }));
+      .catch(() => {
+        if (active) setAuth({ authenticated: false, isAdmin: false });
+      })
+      .finally(() => {
+        if (active) setAuthLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
   }, []);
 
   useEffect(() => {
@@ -70,7 +83,7 @@ function App() {
     >
       {/* Wax seal opening screen — sits on top until opened */}
       <AnimatePresence>
-        {!opened && !isAdminPath && (
+        {!authLoading && !opened && !isAdminPath && (
           <WaxSealScreen
             key="seal"
             onGoogleLogin={startGoogleLogin}

@@ -139,6 +139,7 @@ router.get("/auth/google/callback", async (req, res): Promise<void> => {
   const oauthState = readOAuthStateCookie(req);
   const returnTo = oauthState?.returnTo || "/";
   clearOAuthStateCookie(res);
+  res.setHeader("Cache-Control", "no-store");
 
   try {
     if (req.query.error) {
@@ -172,7 +173,6 @@ router.get("/auth/google/callback", async (req, res): Promise<void> => {
       throw new Error("Supabase did not return a complete authenticated user");
     }
 
-    await recordVisitor(auth.user, auth.access_token, req.get("user-agent") || "unknown");
     const displayName =
       auth.user.user_metadata?.full_name?.trim() ||
       auth.user.user_metadata?.name?.trim() ||
@@ -182,6 +182,15 @@ router.get("/auth/google/callback", async (req, res): Promise<void> => {
       email: auth.user.email,
       displayName,
     });
+
+    // Authentication must not be lost when visitor tracking is unavailable.
+    // The Supabase exchange above is the source of truth for the login.
+    try {
+      await recordVisitor(auth.user, auth.access_token, req.get("user-agent") || "unknown");
+    } catch (error) {
+      req.log.error({ err: error }, "Authenticated visitor could not be recorded");
+    }
+
     res.redirect(returnTo);
   } catch (error) {
     req.log.error({ err: error }, "Supabase Google sign-in failed");
@@ -190,6 +199,8 @@ router.get("/auth/google/callback", async (req, res): Promise<void> => {
 });
 
 router.get("/auth/me", async (req, res): Promise<void> => {
+  res.setHeader("Cache-Control", "no-store");
+
   if (!readSessionCookie(req)) {
     res.json({ authenticated: false, isAdmin: false });
     return;
