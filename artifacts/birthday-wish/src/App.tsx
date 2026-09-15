@@ -25,7 +25,9 @@ function App() {
   const isAdminPath =
     window.location.pathname.replace(/\/+$/, "") === "/admin/visitors";
 
-  const contentVisible = opened || isAdminPath;
+  const hasAdminAccess =
+    isAdminPath && auth?.authenticated === true && auth.isAdmin === true;
+  const contentVisible = isAdminPath ? hasAdminAccess : opened;
 
   const authError = new URLSearchParams(window.location.search).get(
     "authError",
@@ -107,7 +109,7 @@ function App() {
 
         setAuth(data);
 
-        if (data.authenticated) {
+        if (data.authenticated && !isAdminPath) {
           setOpened(true);
         }
       } catch {
@@ -130,6 +132,16 @@ function App() {
       active = false;
     };
   }, []);
+
+  useEffect(() => {
+    if (
+      !authLoading &&
+      isAdminPath &&
+      !hasAdminAccess
+    ) {
+      window.location.replace("/");
+    }
+  }, [authLoading, hasAdminAccess, isAdminPath]);
 
   const logout = async () => {
     await fetch("/api/auth/logout", {
@@ -179,7 +191,7 @@ function App() {
         }}
         className="relative z-10 w-full"
       >
-        {isAdminPath ? (
+        {hasAdminAccess ? (
           <AdminDashboard />
         ) : (
           <>
