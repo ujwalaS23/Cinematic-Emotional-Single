@@ -18,6 +18,7 @@ export type Session = {
   userId: string;
   email: string;
   displayName: string;
+  supabaseAccessToken?: string;
   expiresAt: number;
 };
 
@@ -162,6 +163,8 @@ export function readSessionCookie(req: Request): Session | null {
       typeof parsed.userId !== "string" ||
       typeof parsed.email !== "string" ||
       typeof parsed.displayName !== "string" ||
+      (parsed.supabaseAccessToken !== undefined &&
+        typeof parsed.supabaseAccessToken !== "string") ||
       typeof parsed.expiresAt !== "number" ||
       parsed.expiresAt <= Date.now()
     ) {

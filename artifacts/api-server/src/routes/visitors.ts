@@ -322,6 +322,7 @@ router.get("/auth/google/callback", async (req, res): Promise<void> => {
       userId: auth.user.id,
       email: auth.user.email,
       displayName,
+      supabaseAccessToken: auth.access_token,
     });
 
     try {
@@ -444,6 +445,7 @@ router.post("/auth/session", async (req, res): Promise<void> => {
       userId: user.id,
       email,
       displayName,
+      supabaseAccessToken: accessToken,
     });
 
     /*
@@ -529,6 +531,8 @@ router.post("/auth/logout", (_req, res): void => {
  * ADMIN VISITOR DASHBOARD
  */
 router.get("/admin/visitors", async (req, res): Promise<void> => {
+  res.setHeader("Cache-Control", "no-store");
+
   const result = await requireVisitor(req, res);
 
   if (!result) return;
@@ -556,11 +560,24 @@ router.get("/admin/visitors", async (req, res): Promise<void> => {
     return;
   }
 
-  const response = await supabaseRequest(
-    `/rest/v1/visitors?select=${VISITOR_SELECT}&order=visited_at.desc&limit=1000`,
-  );
+  const visitorQuery =
+    `/rest/v1/visitors?select=${VISITOR_SELECT}&order=visited_at.desc&limit=1000`;
+  const response = result.supabaseAccessToken
+    ? await supabaseAuthenticatedRequest(
+        visitorQuery,
+        result.supabaseAccessToken,
+      )
+    : await supabaseRequest(visitorQuery);
 
   if (!response.ok) {
+    req.log.error(
+      {
+        status: response.status,
+        error: await parseSupabaseError(response),
+      },
+      "Visitor records could not be loaded from Supabase",
+    );
+
     res.status(503).json({
       error: "Visitor records could not be loaded right now.",
     });
