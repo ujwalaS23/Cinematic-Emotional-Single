@@ -67,6 +67,20 @@ export function AdminDashboard() {
     };
   }, [activeSearch, refreshKey]);
 
+  useEffect(() => {
+    const refreshVisitors = () => {
+      setRefreshKey((key) => key + 1);
+    };
+
+    const refreshTimer = window.setInterval(refreshVisitors, 15_000);
+    window.addEventListener('focus', refreshVisitors);
+
+    return () => {
+      window.clearInterval(refreshTimer);
+      window.removeEventListener('focus', refreshVisitors);
+    };
+  }, []);
+
   const displayedVisitors = [...visitors].sort((a, b) => {
     const difference = new Date(a.visited_at).getTime() - new Date(b.visited_at).getTime();
     return sortOrder === 'newest' ? -difference : difference;
