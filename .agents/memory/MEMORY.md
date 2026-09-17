@@ -1,1 +1,1 @@
-- [Supabase admin reads](supabase-admin-access.md) — prefer the authenticated host token for protected visitor reads when the Replit connector proxy is unavailable.
+- [Supabase admin reads](supabase-admin-access.md) — use the server-side service-role key for complete visitor-table access; host-token reads remain a limited fallback.

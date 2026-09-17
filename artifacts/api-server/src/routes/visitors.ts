@@ -157,24 +157,28 @@ async function recordVisitor(
     user.user_metadata?.name?.trim() ||
     email.split("@")[0];
 
-  const response = await supabaseAuthenticatedRequest(
-    "/rest/v1/visitors",
-    accessToken,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Prefer: "return=minimal",
-      },
-      body: JSON.stringify({
-        email,
-        name,
-        visited_at: new Date().toISOString(),
-        user_agent: userAgent.slice(0, 1000),
-      }),
+  const insertRequest: RequestInit = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Prefer: "return=minimal",
     },
-  );
+    body: JSON.stringify({
+      email,
+      name,
+      visited_at: new Date().toISOString(),
+      user_agent: userAgent.slice(0, 1000),
+    }),
+  };
+
+  const response = getServiceRoleConfig()
+    ? await supabaseRequest("/rest/v1/visitors", insertRequest)
+    : await supabaseAuthenticatedRequest(
+        "/rest/v1/visitors",
+        accessToken,
+        insertRequest,
+      );
 
   if (!response.ok) {
     throw new Error(await parseSupabaseError(response));
@@ -562,12 +566,14 @@ router.get("/admin/visitors", async (req, res): Promise<void> => {
 
   const visitorQuery =
     `/rest/v1/visitors?select=${VISITOR_SELECT}&order=visited_at.desc&limit=1000`;
-  const response = result.supabaseAccessToken
-    ? await supabaseAuthenticatedRequest(
-        visitorQuery,
-        result.supabaseAccessToken,
-      )
-    : await supabaseRequest(visitorQuery);
+  const response = getServiceRoleConfig()
+    ? await supabaseRequest(visitorQuery)
+    : result.supabaseAccessToken
+      ? await supabaseAuthenticatedRequest(
+          visitorQuery,
+          result.supabaseAccessToken,
+        )
+      : await supabaseRequest(visitorQuery);
 
   if (!response.ok) {
     req.log.error(
