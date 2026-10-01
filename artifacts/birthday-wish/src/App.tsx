@@ -9,6 +9,7 @@ import { ProudOf } from "./components/ProudOf";
 import { MainLetter } from "./components/MainLetter";
 import { Ending } from "./components/Ending";
 import { AdminDashboard } from "./components/AdminDashboard";
+const API_BASE = "https://cinematic-emotional-single-api-serv.vercel.app";
 
 type AuthStatus = {
   authenticated: boolean;
@@ -63,7 +64,7 @@ function App() {
 
           if (accessToken) {
             try {
-              const sessionResponse = await fetch("/api/auth/session", {
+              const sessionResponse = await fetch(`${API_BASE}/api/auth/session`, {
                 method: "POST",
                 credentials: "include",
                 headers: {
@@ -94,7 +95,7 @@ function App() {
          * Now ask our API whether the visitor has an authenticated
          * birthday-session cookie.
          */
-        const response = await fetch("/api/auth/me", {
+        const response = await fetch(`${API_BASE}/api/auth/me`, {
           credentials: "include",
           cache: "no-store",
         });
@@ -144,7 +145,7 @@ function App() {
   }, [authLoading, hasAdminAccess, isAdminPath]);
 
   const logout = async () => {
-    await fetch("/api/auth/logout", {
+    await fetch(`${API_BASE}/api/auth/logout`, {
       method: "POST",
       credentials: "include",
     });
