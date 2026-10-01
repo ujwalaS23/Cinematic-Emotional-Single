@@ -1,11 +1,6 @@
 {
   "version": 2,
   "buildCommand": "pnpm run build",
-  "functions": {
-    "api/index.js": {
-      "runtime": "nodejs24.x"
-    }
-  },
   "routes": [
     {
       "src": "/api/(.*)",
