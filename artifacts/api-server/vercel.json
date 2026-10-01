@@ -1,6 +1,11 @@
 {
   "version": 2,
   "buildCommand": "pnpm run build",
+  "functions": {
+    "api/index.js": {
+      "includeFiles": "dist/**"
+    }
+  },
   "routes": [
     {
       "src": "/api/(.*)",
