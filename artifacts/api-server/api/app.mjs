@@ -33569,7 +33569,7 @@ app.use((0, import_cors.default)({ credentials: true, origin: true }));
 app.use((0, import_cookie_parser.default)());
 app.use(import_express4.default.json());
 app.use(import_express4.default.urlencoded({ extended: true }));
-app.use("/", routes_default);
+app.use("/api", routes_default);
 var app_default = app;
 export {
   app_default as default
