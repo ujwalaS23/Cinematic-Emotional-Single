@@ -86,6 +86,7 @@ function App() {
           const accessToken = params.get("access_token");
 
           if (accessToken) {
+            setOpened(true);
             try {
               const sessionResponse = await fetch(
                 `${API_BASE}/api/auth/session`,
