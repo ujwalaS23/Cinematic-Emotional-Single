@@ -1,15 +1,24 @@
 import React, { useEffect, useState } from "react";
+
 import Lenis from "lenis";
+
 import { AnimatePresence, motion } from "framer-motion";
 
 import { WaxSealScreen } from "./components/WaxSealScreen";
+
 import { IntroLetter } from "./components/IntroLetter";
+
 import { Gallery } from "./components/Gallery";
+
 import { ProudOf } from "./components/ProudOf";
+
 import { MainLetter } from "./components/MainLetter";
+
 import { Ending } from "./components/Ending";
+
 import { AdminDashboard } from "./components/AdminDashboard";
-const API_BASE = "https://cinematic-emotional-single-api-serv.vercel.app";
+
+const API_BASE = "";
 
 type AuthStatus = {
   authenticated: boolean;
@@ -20,28 +29,39 @@ type AuthStatus = {
 
 function App() {
   const [opened, setOpened] = useState(false);
+
   const [auth, setAuth] = useState<AuthStatus | null>(null);
+
   const [authLoading, setAuthLoading] = useState(true);
 
   const isAdminPath =
     window.location.pathname.replace(/\/+$/, "") === "/admin/visitors";
 
   const hasAdminAccess =
-    isAdminPath && auth?.authenticated === true && auth.isAdmin === true;
+    isAdminPath &&
+    auth?.authenticated === true &&
+    auth.isAdmin === true;
+
   const contentVisible = isAdminPath ? hasAdminAccess : opened;
 
-  const authError = new URLSearchParams(window.location.search).get(
-    "authError",
-  );
+  const authError = new URLSearchParams(
+    window.location.search,
+  ).get("authError");
 
   const startGoogleLogin = () => {
-    const returnTo = `${window.location.pathname}${window.location.search
-      .replace(/([?&])authError=[^&]*/, "")
-      .replace(/[?&]$/, "")}`;
+    const supabaseUrl =
+      "https://dilxvwrkzbiivjfusctf.supabase.co";
 
-    window.location.assign(
-      `/api/auth/google/login?returnTo=${encodeURIComponent(returnTo || "/")}`,
-    );
+    const redirectTo =
+      "https://cinematic-emotional-single.vercel.app/";
+
+    const googleLoginUrl =
+      `${supabaseUrl}/auth/v1/authorize` +
+      `?provider=google` +
+      `&flow_type=implicit` +
+      `&redirect_to=${encodeURIComponent(redirectTo)}`;
+
+    window.location.assign(googleLoginUrl);
   };
 
   useEffect(() => {
@@ -50,39 +70,42 @@ function App() {
     const finishAuthentication = async () => {
       try {
         /*
-         * Supabase returns the Google session in the URL hash:
-         * #access_token=...
+         * Supabase may return an access token in the URL hash.
          *
-         * Send that access token to our API so the API can create
-         * the normal birthday_session cookie.
+         * If one exists, send it to our API so the API can
+         * create the normal birthday_session cookie.
          */
         const hash = window.location.hash;
 
         if (hash.includes("access_token=")) {
-          const params = new URLSearchParams(hash.substring(1));
+          const params = new URLSearchParams(
+            hash.substring(1),
+          );
+
           const accessToken = params.get("access_token");
 
           if (accessToken) {
             try {
-              const sessionResponse = await fetch(`${API_BASE}/api/auth/session`, {
-                method: "POST",
-                credentials: "include",
-                headers: {
-                  "Content-Type": "application/json",
+              const sessionResponse = await fetch(
+                `${API_BASE}/api/auth/session`,
+                {
+                  method: "POST",
+                  credentials: "include",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    access_token: accessToken,
+                  }),
                 },
-                body: JSON.stringify({
-                  access_token: accessToken,
-                }),
-              });
+              );
 
               if (sessionResponse.ok) {
-                /*
-                 * Remove the Supabase access token from the browser URL.
-                 */
                 window.history.replaceState(
                   {},
                   document.title,
-                  window.location.pathname + window.location.search,
+                  window.location.pathname +
+                    window.location.search,
                 );
               }
             } catch {
@@ -92,13 +115,15 @@ function App() {
         }
 
         /*
-         * Now ask our API whether the visitor has an authenticated
-         * birthday-session cookie.
+         * Check the application's session cookie.
          */
-        const response = await fetch(`${API_BASE}/api/auth/me`, {
-          credentials: "include",
-          cache: "no-store",
-        });
+        const response = await fetch(
+          `${API_BASE}/api/auth/me`,
+          {
+            credentials: "include",
+            cache: "no-store",
+          },
+        );
 
         if (!response.ok) {
           throw new Error("Auth status unavailable");
@@ -110,7 +135,7 @@ function App() {
 
         setAuth(data);
 
-        if (data.authenticated && !isAdminPath) {
+        if (data.authenticated) {
           setOpened(true);
         }
       } catch {
@@ -159,36 +184,55 @@ function App() {
   };
 
   return (
-    /* Page background — warm cream with soft peach/rose blushes */
     <div
       className="min-h-[100dvh] relative overflow-x-hidden"
       style={{
         backgroundColor: "#FFF9F3",
         backgroundImage: `
-          radial-gradient(ellipse 60% 40% at 10% 15%, rgba(248,220,200,0.45) 0%, transparent 60%),
-          radial-gradient(ellipse 50% 35% at 90% 75%, rgba(217,165,165,0.25) 0%, transparent 55%),
-          radial-gradient(ellipse 70% 60% at 50% 50%, rgba(244,233,221,0.3) 0%, transparent 70%)
+          radial-gradient(
+            ellipse 60% 40% at 10% 15%,
+            rgba(248,220,200,0.45) 0%,
+            transparent 60%
+          ),
+          radial-gradient(
+            ellipse 50% 35% at 90% 75%,
+            rgba(217,165,165,0.25) 0%,
+            transparent 55%
+          ),
+          radial-gradient(
+            ellipse 70% 60% at 50% 50%,
+            rgba(244,233,221,0.3) 0%,
+            transparent 70%
+          )
         `,
       }}
     >
-      {/* Wax seal opening screen — sits on top until opened */}
       <AnimatePresence>
-        {!authLoading && !opened && !isAdminPath && (
-          <WaxSealScreen
-            key="seal"
-            onGoogleLogin={startGoogleLogin}
-            authError={authError}
-          />
-        )}
+        {!authLoading &&
+          !opened &&
+          !isAdminPath && (
+            <WaxSealScreen
+              key="seal"
+              onGoogleLogin={startGoogleLogin}
+              authError={authError}
+            />
+          )}
       </AnimatePresence>
 
-      {/* Main content — fades in after opening */}
       <motion.main
         initial={{ opacity: 0 }}
-        animate={{ opacity: contentVisible ? 1 : 0 }}
-        transition={{ duration: 1.2, ease: "easeOut", delay: 0.3 }}
+        animate={{
+          opacity: contentVisible ? 1 : 0,
+        }}
+        transition={{
+          duration: 1.2,
+          ease: "easeOut",
+          delay: 0.3,
+        }}
         style={{
-          pointerEvents: contentVisible ? "auto" : "none",
+          pointerEvents: contentVisible
+            ? "auto"
+            : "none",
         }}
         className="relative z-10 w-full"
       >
@@ -203,10 +247,13 @@ function App() {
                     href="/admin/visitors"
                     className="rounded-full px-3 py-2"
                     style={{
-                      backgroundColor: "rgba(255, 252, 248, 0.9)",
-                      border: "1px solid rgba(184, 92, 92, 0.25)",
+                      backgroundColor:
+                        "rgba(255, 252, 248, 0.9)",
+                      border:
+                        "1px solid rgba(184, 92, 92, 0.25)",
                       color: "#9E3A3A",
-                      fontFamily: '"Crimson Pro", serif',
+                      fontFamily:
+                        '"Crimson Pro", serif',
                       fontSize: "0.95rem",
                     }}
                   >
@@ -219,10 +266,13 @@ function App() {
                   onClick={logout}
                   className="rounded-full px-3 py-2"
                   style={{
-                    backgroundColor: "rgba(255, 252, 248, 0.9)",
-                    border: "1px solid rgba(184, 92, 92, 0.25)",
+                    backgroundColor:
+                      "rgba(255, 252, 248, 0.9)",
+                    border:
+                      "1px solid rgba(184, 92, 92, 0.25)",
                     color: "#9E3A3A",
-                    fontFamily: '"Crimson Pro", serif',
+                    fontFamily:
+                      '"Crimson Pro", serif',
                     fontSize: "0.95rem",
                     cursor: "pointer",
                   }}
@@ -233,9 +283,13 @@ function App() {
             )}
 
             <IntroLetter />
+
             <Gallery />
+
             <ProudOf />
+
             <MainLetter />
+
             <Ending />
           </>
         )}
