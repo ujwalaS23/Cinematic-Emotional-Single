@@ -70,10 +70,11 @@ function App() {
     const finishAuthentication = async () => {
       try {
         /*
-         * Supabase may return an access token in the URL hash.
+         * Supabase returns the access token in the URL hash
+         * after successful Google authentication.
          *
-         * If one exists, send it to our API so the API can
-         * create the normal birthday_session cookie.
+         * Send that token to our API so the API can create
+         * the normal birthday_session cookie.
          */
         const hash = window.location.hash;
 
@@ -101,12 +102,28 @@ function App() {
               );
 
               if (sessionResponse.ok) {
+                const sessionData: AuthStatus =
+                  await sessionResponse.json();
+
+                if (!active) return;
+
+                /*
+                 * The API has accepted the Supabase token.
+                 * Open the birthday page immediately.
+                 */
+                setAuth(sessionData);
+                setOpened(true);
+
                 window.history.replaceState(
                   {},
                   document.title,
                   window.location.pathname +
                     window.location.search,
                 );
+
+                setAuthLoading(false);
+
+                return;
               }
             } catch {
               // Continue to the normal authentication check.
@@ -115,7 +132,8 @@ function App() {
         }
 
         /*
-         * Check the application's session cookie.
+         * No new access token was found.
+         * Check the application's existing session cookie.
          */
         const response = await fetch(
           `${API_BASE}/api/auth/me`,
